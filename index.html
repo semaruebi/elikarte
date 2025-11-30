@@ -5,23 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>精鋭狩りRTA Knowledge Base</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=5">
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=M+PLUS+Rounded+1c:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
     <aside id="mobile-sidebar">
-        <div class="sidebar-header" onclick="toggleMobileSidebar()">
-            <span>🏹 精鋭狩りRTA</span>
-            <i class="fas fa-chevron-down mobile-toggle-icon"></i>
+        <div class="sidebar-header" style="padding: 20px; font-family: var(--font-display);">
+             <span style="color:var(--cyan);">メニュー</span>
         </div>
         <div class="nav-list" id="sidebar-nav"></div>
     </aside>
 
     <main>
         <header>
-            <h2 id="current-view-title">🏠 Home</h2>
+            <div class="header-actions">
+                <button onclick="toggleMobileSidebar()" class="icon-btn mobile-menu-btn" title="メニューを開く/閉じる">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2 id="current-view-title">🏠 Home</h2>
+            </div>
+            
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" id="search-input" placeholder="検索..." onkeyup="filterBySearch()">
+                <input type="text" id="search-input" placeholder="検索..." onkeyup="handleSearchInput()" onfocus="showSuggestions()" autocomplete="off">
+                <div id="search-suggestions" class="search-suggestions"></div>
             </div>
             
             <div class="header-actions">

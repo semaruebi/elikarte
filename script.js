@@ -6,13 +6,42 @@ let myLikedPosts = JSON.parse(localStorage.getItem('rta_liked_posts') || '[]');
 let myLikedComments = JSON.parse(localStorage.getItem('rta_liked_comments') || '[]');
 let openRegions = {};
 let homeSections = { popular: true, latest: true };
+let availableTags = new Set();
+// スワイプ検知用
+let touchstartX = 0;
+let touchendX = 0;
+const SWIPE_THRESHOLD = 50; 
 
 window.onload = function() { 
     loadTheme();
     fetchData(); 
+    
+    document.addEventListener('click', function(e) {
+        const searchBox = document.querySelector('.search-box');
+        const suggestions = document.getElementById('search-suggestions');
+        if (suggestions && suggestions.classList.contains('show') && !searchBox.contains(e.target)) {
+            suggestions.classList.remove('show');
+        }
+    });
+
+    const sidebar = document.getElementById('mobile-sidebar');
+    if(sidebar){
+        sidebar.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, false);
+        sidebar.addEventListener('touchend', e => { touchendX = e.changedTouches[0].screenX; checkSwipeDirection(); }, false);
+    }
 };
 
-// --- テーマ切り替え ---
+function checkSwipeDirection() {
+    const sidebar = document.getElementById('mobile-sidebar');
+    const isOpen = sidebar.classList.contains('open');
+    const deltaX = touchendX - touchstartX;
+    if (isOpen && deltaX < -SWIPE_THRESHOLD) {
+        toggleMobileSidebar();
+        return true;
+    }
+    return false;
+}
+
 function cycleTheme() {
     const body = document.body;
     const current = body.getAttribute('data-theme') || 'dark';
@@ -54,13 +83,35 @@ function loadTheme() {
     }
 }
 
-// --- 投稿フォームの開閉 ---
 function togglePostForm() {
     const form = document.getElementById('post-form-container');
     form.classList.toggle('closed');
 }
 
-// --- 画像プレビュー ---
+function openImageModal(imageUrl) {
+    const modal = document.getElementById('image-modal');
+    const modalImage = document.getElementById('modal-image');
+    modal.style.display = "block";
+    modalImage.src = imageUrl;
+    document.body.classList.add('modal-open'); 
+    modal.classList.remove('closing'); 
+    modalImage.classList.remove('closing'); 
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('image-modal');
+    const modalImage = document.getElementById('modal-image');
+    modal.classList.add('closing');
+    modalImage.classList.add('closing');
+    setTimeout(() => {
+        modal.style.display = "none";
+        document.body.classList.remove('modal-open'); 
+        modal.classList.remove('closing'); 
+        modalImage.classList.remove('closing');
+        modalImage.src = ""; 
+    }, 300);
+}
+
 document.getElementById('input-image').addEventListener('change', function(e) {
     const preview = document.getElementById('image-preview');
     preview.innerHTML = "";
@@ -84,7 +135,6 @@ document.getElementById('input-image').addEventListener('change', function(e) {
     });
 });
 
-// --- データ取得 ---
 function fetchData(btnElement = null) {
     const container = document.getElementById("main-container");
     let originalIcon = "";
@@ -98,22 +148,38 @@ function fetchData(btnElement = null) {
     }
 
     fetch(GAS_API_URL + '?t=' + Date.now())
-        .then(res => res.json())
-        .then(data => {
-            allData = data;
-            renderSidebar();
-            
-            const searchVal = document.getElementById("search-input").value;
-            if(searchVal) filterBySearch();
-            else if (currentFilter.region) renderPosts();
-            else renderHome();
-            
-            setupFormOptions();
+        .then(res => {
+            if (!res.ok) throw new Error("Network error");
+            return res.text();
+        })
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                allData = data;
+                
+                collectAllTags();
+                renderSidebar();
+                
+                const searchVal = document.getElementById("search-input").value;
+                if(searchVal) filterBySearch();
+                else if (currentFilter.region) renderPosts();
+                else renderHome();
+                
+                setupFormOptions();
+            } catch (e) {
+                console.error("JSON Parse Error:", e, text);
+                throw new Error("データの読み込みに失敗しました");
+            }
         })
         .catch(err => {
             console.error(err);
             if (allData.posts.length === 0 && !btnElement) {
-                container.innerHTML = '<p style="color:var(--red)">あら、エラーみたい。落ち着くのよ。</p>';
+                container.innerHTML = `
+                    <div style="text-align:center; padding:20px; color:var(--red);">
+                        <p><i class="fas fa-exclamation-triangle"></i> あら、エラーみたい。落ち着くのよ。</p>
+                        <p style="font-size:0.8em; color:var(--comment);">連続で更新すると疲れちゃうの。少し休んでから再読み込みしてね。</p>
+                        <button onclick="fetchData()" style="margin-top:10px; padding:5px 15px; cursor:pointer;">再診する</button>
+                    </div>`;
             } else {
                 console.log("更新に失敗したけど、鎮痛剤ならまだあるはず…（表示維持）");
             }
@@ -126,7 +192,55 @@ function fetchData(btnElement = null) {
         });
 }
 
-// --- サイドバー描画 ---
+function collectAllTags() {
+    availableTags.clear();
+    if(allData.posts) {
+        allData.posts.forEach(post => {
+            if(post.tags) {
+                const tags = post.tags.split(',');
+                tags.forEach(t => {
+                    if(t.trim()) availableTags.add(t.trim());
+                });
+            }
+        });
+    }
+}
+
+function handleSearchInput() {
+    const inputVal = document.getElementById("search-input").value;
+    filterBySearch(); 
+    showSuggestions(inputVal); 
+}
+
+function showSuggestions(filterText = "") {
+    const suggestionBox = document.getElementById('search-suggestions');
+    suggestionBox.innerHTML = "";
+    
+    const filteredTags = Array.from(availableTags).filter(tag => 
+        tag.toLowerCase().includes(filterText.toLowerCase())
+    ).sort();
+
+    if (filteredTags.length === 0) {
+        suggestionBox.classList.remove('show');
+        return;
+    }
+
+    filteredTags.forEach(tag => {
+        const div = document.createElement('div');
+        div.className = 'suggestion-item';
+        div.innerHTML = `<i class="fas fa-tag suggestion-tag-icon"></i> ${escapeHtml(tag)}`;
+        
+        div.onclick = () => {
+            document.getElementById("search-input").value = tag;
+            filterBySearch();
+            suggestionBox.classList.remove('show');
+        };
+        suggestionBox.appendChild(div);
+    });
+
+    suggestionBox.classList.add('show');
+}
+
 function renderSidebar() {
     const nav = document.getElementById("sidebar-nav");
     if (!nav) return;
@@ -181,11 +295,12 @@ function toggleRegion(region) {
     renderSidebar(); 
 }
 
-// --- 検索フィルター ---
 function filterBySearch() {
     const keyword = document.getElementById("search-input").value.toLowerCase();
     document.getElementById("current-view-title").innerText = keyword ? `🔍 Search: "${keyword}"` : "🏠 Home";
     document.getElementById("post-form-container").style.display = "none";
+    document.getElementById('search-suggestions').classList.remove('show');
+
     const filtered = allData.posts.filter(p => 
         (p.content && p.content.toLowerCase().includes(keyword)) ||
         (p.route && p.route.toLowerCase().includes(keyword)) ||
@@ -199,12 +314,13 @@ function filterBySearch() {
     container.innerHTML = html;
 }
 
-// --- ホーム表示 (アコーディオン化) ---
 function renderHome() {
     currentFilter = { region: null, route: null };
     document.getElementById("search-input").value = "";
     document.getElementById("current-view-title").innerText = "🏠 Home";
     
+    closeSidebarOnNavigation(); // ★メニューを閉じる
+
     const form = document.getElementById("post-form-container");
     form.style.display = "block";
     form.classList.add('closed');
@@ -256,11 +372,14 @@ function toggleHomeSection(sectionName) {
     renderHome();
 }
 
-// --- 記事フィルタリング ---
 function filterPosts(region, route) {
     currentFilter = { region, route };
     document.getElementById("search-input").value = "";
     document.getElementById("current-view-title").innerText = `${region} > ${route}`;
+    
+    closeSidebarOnNavigation(); // ★メニューを閉じる
+    document.getElementById('search-suggestions').classList.remove('show');
+    
     const form = document.getElementById("post-form-container");
     form.style.display = "block";
     form.classList.add('closed');
@@ -277,7 +396,6 @@ function filterPosts(region, route) {
     container.innerHTML = html;
 }
 
-// --- カード生成 ---
 function createCardHtml(post) {
     const isLiked = myLikedPosts.includes(post.id);
     let contentHtml = escapeHtml(post.content);
@@ -293,7 +411,6 @@ function createCardHtml(post) {
     if (post.imageUrl) {
         const urls = post.imageUrl.split(',');
         imageHtml = '<div class="image-gallery">';
-        // ここを修正：onclickイベントでopenImageModalを呼び出す
         urls.forEach(url => { if(url.trim()) imageHtml += `<img src="${url}" class="post-image" referrerpolicy="no-referrer" onclick="event.stopPropagation(); openImageModal('${url}')">`; });
         imageHtml += '</div>';
     }
@@ -465,7 +582,7 @@ function toggleCommentLike(commentId, btn) {
         method: "POST", 
         mode: "no-cors", 
         headers:{"Content-Type":"application/json"}, 
-        body: JSON_data({action:"like_comment", id: commentId}) 
+        body: JSON.stringify({action:"like_comment", id: commentId}) 
     });
 }
 
@@ -573,8 +690,35 @@ function setupFormOptions() {
 function showHome() { renderHome(); }
 function toggleMobileSidebar() {
     const sidebar = document.getElementById('mobile-sidebar');
+    const body = document.body;
+    const menuIcon = document.querySelector('.mobile-menu-btn i');
+    const isOpen = sidebar.classList.contains('open');
+
     sidebar.classList.toggle('open');
+    body.classList.toggle('sidebar-open');
+
+    // アイコンの切り替え
+    if (menuIcon) { // menuIconが存在するかチェック
+        if (isOpen) {
+            menuIcon.className = 'fas fa-bars'; 
+        } else {
+            menuIcon.className = 'fas fa-times'; 
+        }
+    }
 }
+
+function closeSidebarOnNavigation() {
+    const sidebar = document.getElementById('mobile-sidebar');
+    const body = document.body;
+    const menuIcon = document.querySelector('.mobile-menu-btn i');
+    // スマホでのみメニューを閉じる
+    if (window.innerWidth <= 900 && sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        body.classList.remove('sidebar-open');
+        if(menuIcon) menuIcon.className = 'fas fa-bars';
+    }
+}
+
 function escapeHtml(str) {
     if (!str) return "";
     return str.replace(/[&<>"']/g, function(match) {
@@ -587,33 +731,4 @@ function escapeHtml(str) {
         };
         return escape[match];
     });
-}
-
-// --- 画像モーダル関連関数 ---
-function openImageModal(imageUrl) {
-    const modal = document.getElementById('image-modal');
-    const modalImage = document.getElementById('modal-image');
-    modal.style.display = "block";
-    modalImage.src = imageUrl;
-    document.body.classList.add('modal-open'); // bodyのスクロールを禁止
-    modal.classList.remove('closing'); 
-    modalImage.classList.remove('closing'); 
-}
-
-function closeImageModal() {
-    const modal = document.getElementById('image-modal');
-    const modalImage = document.getElementById('modal-image');
-
-    // 閉じるアニメーション用のクラスを追加
-    modal.classList.add('closing');
-    modalImage.classList.add('closing');
-
-    // アニメーションが終わるころ（0.3秒後）に非表示にする
-    setTimeout(() => {
-        modal.style.display = "none";
-        document.body.classList.remove('modal-open'); // スクロール禁止を解除
-        modal.classList.remove('closing'); 
-        modalImage.classList.remove('closing');
-        modalImage.src = ""; // 次回のためにリセット
-    }, 300);
 }
