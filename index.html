@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精鋭狩りRTA Knowledge Base</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+    <aside>
+        <div class="sidebar-header" onclick="showHome()">🏹 精鋭狩りRTA</div>
+        <div class="nav-list" id="sidebar-nav"></div>
+    </aside>
+
+    <main>
+        <header>
+            <h2 id="current-view-title">🏠 Home</h2>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="検索..." onkeyup="filterBySearch()">
+            </div>
+            
+            <div class="header-actions">
+                <button onclick="cycleTheme()" class="icon-btn theme-toggle" title="テーマ切り替え">
+                    <i id="theme-icon" class="fas fa-moon"></i>
+                </button>
+                <button onclick="fetchData(this)" class="icon-btn" title="最新情報に更新">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <div id="post-form-container" class="post-area closed" style="display:block;">
+            <div class="post-header" onclick="togglePostForm()">
+                <div class="post-header-title">
+                    <i class="fas fa-bolt"></i> 新しい知見を共有
+                </div>
+                <i class="fas fa-chevron-down post-toggle-icon"></i>
+            </div>
+            
+            <div class="post-content-wrapper">
+                <div class="input-row">
+                    <select id="input-region" disabled><option>エリアを選択</option></select>
+                    <select id="input-route"><option>ルートを選択</option></select>
+                </div>
+                
+                <div class="tag-section">
+                    <span class="tag-label">レギュレーション (必須)</span>
+                    <div class="tag-options">
+                        <label><input type="radio" name="tag_reg" value="NPuI"><span class="tag-radio-label">NPuI</span></label>
+                        <label><input type="radio" name="tag_reg" value="PuA"><span class="tag-radio-label">PuA</span></label>
+                        <label><input type="radio" name="tag_reg" value="PuI"><span class="tag-radio-label">PuI</span></label>
+                        <label><input type="radio" name="tag_reg" value="全般"><span class="tag-radio-label">全般</span></label>
+                    </div>
+                    <span class="tag-label">Cost (必須)</span>
+                    <div class="tag-options">
+                        <label><input type="radio" name="tag_cost" value="制限なし"><span class="tag-radio-label">制限なし</span></label>
+                        <label><input type="radio" name="tag_cost" value="低凸"><span class="tag-radio-label">低凸</span></label>
+                        <label><input type="radio" name="tag_cost" value="Cost全般"><span class="tag-radio-label">全般</span></label>
+                    </div>
+                    <span class="tag-label">オプションタグ (自由選択)</span>
+                    <div class="tag-options">
+                        <label><input type="checkbox" name="tag_opt" value="誘導"><span class="tag-radio-label">誘導</span></label>
+                        <label><input type="checkbox" name="tag_opt" value="弓起動"><span class="tag-radio-label">弓起動</span></label>
+                        <label><input type="checkbox" name="tag_opt" value="処理法"><span class="tag-radio-label">処理法</span></label>
+                        <label><input type="checkbox" name="tag_opt" value="位置調整"><span class="tag-radio-label">位置調整</span></label>
+                        <label><input type="checkbox" name="tag_opt" value="コツ"><span class="tag-radio-label">コツ</span></label>
+                        <label><input type="checkbox" name="tag_opt" value="注意点"><span class="tag-radio-label">注意点</span></label>
+                    </div>
+                    <span class="tag-label">自由タグ (最大2つ)</span>
+                    <div class="free-tags-row">
+                        <input type="text" id="tag-free-1" placeholder="自由タグ1">
+                        <input type="text" id="tag-free-2" placeholder="自由タグ2">
+                    </div>
+                </div>
+
+                <textarea id="input-content" rows="3" placeholder="解説やYouTubeのURLを貼ってね！"></textarea>
+                
+                <div class="file-input-wrapper">
+                    <i class="fas fa-images"></i>
+                    <input type="file" id="input-image" accept="image/*" multiple>
+                    <span style="font-size:0.8em;">※4枚まで (各2MB)</span>
+                </div>
+                <div id="image-preview" class="preview-area"></div>
+
+                <div style="text-align: right;">
+                    <button onclick="postData()">投稿する</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-scroll">
+            <div id="main-container"></div>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <p>当サイトは原神(Genshin Impact)の非公式ファンサイトなのよ。</p>
+                <p>
+                    開発者: <a href="https://x.com/_c_aca" target="_blank">@_c_aca</a> | Powered by GAS
+                </p>
+                <p class="copyright">&copy; 2025 精鋭狩りRTA Knowledge Base</p>
+            </div>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
