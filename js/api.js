@@ -22,7 +22,7 @@ async function fetchData(btnElement = null) {
     } else if (!allData.posts.length) {
         container.innerHTML = `
             <div class="loading" role="status" aria-live="polite" style="text-align: center; padding: 40px;">
-                <img src="assets/images/cygewinne/ochusha.webp" alt="治療中のシグウィン" style="width: 120px; height: 120px; object-fit: contain; margin: 0 auto 20px; display: block; animation: bounce 1s infinite;">
+                <img src="assets/images/sigewinne/ochusha.webp" alt="治療中のシグウィン" style="width: 120px; height: 120px; object-fit: contain; margin: 0 auto 20px; display: block; animation: bounce 1s infinite;">
                 <p><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> 診断中…じっとしててね。</p>
             </div>
         `;

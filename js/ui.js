@@ -111,7 +111,7 @@ function renderPosts() {
     if (filtered.length === 0) {
         html += `
             <div class="empty-state" style="text-align: center; padding: 60px 20px;">
-                <img src="assets/images/cygewinne/ofuton.webp" alt="リラックス中のシグウィン" style="width: 150px; height: 150px; object-fit: contain; margin: 0 auto 20px; display: block;">
+                <img src="assets/images/sigewinne/ofuton.webp" alt="リラックス中のシグウィン" style="width: 150px; height: 150px; object-fit: contain; margin: 0 auto 20px; display: block;">
                 <p style="font-size: 1.2em; color: var(--cyan); margin-bottom: 10px;">一番乗りね！</p>
                 <p style="color: var(--comment);">可愛い人には、最高のお宝が相応しいのよ。💉</p>
             </div>
@@ -247,7 +247,7 @@ function renderHome() {
     if (!allData.posts || allData.posts.length === 0) {
         container.innerHTML = `
             <div class="empty-state" style="text-align: center; padding: 60px 20px;">
-                <img src="assets/images/cygewinne/nnn.webp" alt="満足そうなシグウィン" style="width: 150px; height: 150px; object-fit: contain; margin: 0 auto 20px; display: block;">
+                <img src="assets/images/sigewinne/nnn.webp" alt="満足そうなシグウィン" style="width: 150px; height: 150px; object-fit: contain; margin: 0 auto 20px; display: block;">
                 <p style="font-size: 1.2em; color: var(--cyan); margin-bottom: 10px;">まだ投稿がないのよ！</p>
                 <p style="color: var(--comment);">最初の投稿を書いて、みんなの役に立つ情報を共有してちょうだいね💉</p>
             </div>
