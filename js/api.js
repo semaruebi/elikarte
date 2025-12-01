@@ -20,7 +20,12 @@ async function fetchData(btnElement = null) {
         btnElement.innerHTML = '<i class="fas fa-sync-alt fa-spin" aria-hidden="true"></i>';
         btnElement.setAttribute('aria-label', '更新中...');
     } else if (!allData.posts.length) {
-        container.innerHTML = '<p class="loading" role="status" aria-live="polite"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> 診断中…じっとしててね。</p>';
+        container.innerHTML = `
+            <div class="loading" role="status" aria-live="polite" style="text-align: center; padding: 40px;">
+                <img src="assets/images/cygewinne/ochusha.webp" alt="治療中のシグウィン" style="width: 120px; height: 120px; object-fit: contain; margin: 0 auto 20px; display: block; animation: bounce 1s infinite;">
+                <p><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> 診断中…じっとしててね。</p>
+            </div>
+        `;
     }
     
     try {

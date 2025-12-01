@@ -109,7 +109,13 @@ function renderPosts() {
     );
     
     if (filtered.length === 0) {
-        html += "<p style='padding:20px'>一番乗りね。可愛い人には、最高のお宝が相応しいのよ。</p>";
+        html += `
+            <div class="empty-state" style="text-align: center; padding: 60px 20px;">
+                <img src="assets/images/cygewinne/ofuton.webp" alt="リラックス中のシグウィン" style="width: 150px; height: 150px; object-fit: contain; margin: 0 auto 20px; display: block;">
+                <p style="font-size: 1.2em; color: var(--cyan); margin-bottom: 10px;">一番乗りね！</p>
+                <p style="color: var(--comment);">可愛い人には、最高のお宝が相応しいのよ。💉</p>
+            </div>
+        `;
     } else {
         filtered.forEach(p => html += createCardHtml(p, true));
     }
@@ -237,6 +243,18 @@ function renderHome() {
     
     if (titleEl) titleEl.innerText = "400EENote";
     
+    // 投稿が全くない場合の空の状態
+    if (!allData.posts || allData.posts.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state" style="text-align: center; padding: 60px 20px;">
+                <img src="assets/images/cygewinne/nnn.webp" alt="満足そうなシグウィン" style="width: 150px; height: 150px; object-fit: contain; margin: 0 auto 20px; display: block;">
+                <p style="font-size: 1.2em; color: var(--cyan); margin-bottom: 10px;">まだ投稿がないのよ！</p>
+                <p style="color: var(--comment);">最初の投稿を書いて、みんなの役に立つ情報を共有してちょうだいね💉</p>
+            </div>
+        `;
+        return;
+    }
+    
     // 人気順・新着順でソート
     const sortedByLikes = [...allData.posts].sort((a, b) => (b.likes || 0) - (a.likes || 0));
     const sortedByDate = [...allData.posts].sort((a, b) => {
@@ -248,6 +266,14 @@ function renderHome() {
     const popOpen = homeSections.popular ? 'open' : '';
     const latOpen = homeSections.latest ? 'open' : '';
     
+    const popularContent = sortedByLikes.length > 0 
+        ? sortedByLikes.slice(0, 10).map(p => createCompactCardHtml(p)).join('')
+        : '<p style="padding: 20px; text-align: center; color: var(--comment);">まだいいねされた投稿がないわ。</p>';
+    
+    const latestContent = sortedByDate.length > 0
+        ? sortedByDate.slice(0, 10).map(p => createCompactCardHtml(p)).join('')
+        : '<p style="padding: 20px; text-align: center; color: var(--comment);">まだ投稿がないわ。</p>';
+    
     container.innerHTML = `
         <div class="section-header" onclick="toggleHomeSection('popular')" role="button" tabindex="0" aria-expanded="${homeSections.popular}">
             <span><i class="fas fa-fire" aria-hidden="true"></i> 人気の投稿</span>
@@ -255,7 +281,7 @@ function renderHome() {
         </div>
         <div id="section-popular" class="section-content-horizontal ${popOpen}" role="region">
             <div class="card-scroll-container">
-                ${sortedByLikes.slice(0, 10).map(p => createCompactCardHtml(p)).join('')}
+                ${popularContent}
             </div>
         </div>
         
@@ -265,7 +291,7 @@ function renderHome() {
         </div>
         <div id="section-latest" class="section-content-horizontal ${latOpen}" role="region">
             <div class="card-scroll-container">
-                ${sortedByDate.slice(0, 10).map(p => createCompactCardHtml(p)).join('')}
+                ${latestContent}
             </div>
         </div>
     `;

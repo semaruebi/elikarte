@@ -20,8 +20,9 @@
     <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
     
     <aside id="mobile-sidebar" role="navigation" aria-label="メインナビゲーション" aria-hidden="true">
-        <div class="sidebar-header" onclick="showHome()" style="padding: 20px; font-family: var(--font-display); cursor: pointer;">
-             <span style="color:var(--cyan);">TOPIC</span>
+        <div class="sidebar-header" onclick="showHome()" style="padding: 20px; font-family: var(--font-display); cursor: pointer; display: flex; align-items: center; gap: 12px;">
+            <img src="assets/images/cygewinne/nnn.webp" alt="シグウィン" style="width: 48px; height: 48px; object-fit: contain;">
+            <span style="color:var(--cyan);">TOPIC</span>
         </div>
         <div class="nav-list" id="sidebar-nav" role="list"></div>
     </aside>
@@ -221,6 +222,9 @@
                 <button class="modal-close" onclick="closeAboutModal()" aria-label="閉じる" role="button" tabindex="0">&times;</button>
             </div>
             <div class="about-modal-body">
+                <div class="about-section" style="text-align: center; padding-bottom: 10px;">
+                    <img src="assets/images/cygewinne/hi.webp" alt="シグウィン" style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto 10px;">
+                </div>
                 <div class="about-section">
                     <h4><i class="fas fa-feather-alt" aria-hidden="true"></i> 400EENoteとは</h4>
                     <p>400EENoteは、原神（Genshin Impact）の非公式ファンサイト、精鋭狩りの知識・情報を共有するためのコミュニティプラットフォームなのよ。💉</p>

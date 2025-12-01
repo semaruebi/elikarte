@@ -68,6 +68,7 @@ function showSuggestions(filterText = "") {
             const input = document.getElementById("search-input");
             if (input) {
                 input.value = tag;
+                searchType = "tag"; // タグ検索モードに切り替え
                 updateSearchTypeSelector();
                 filterBySearch();
                 suggestionBox.classList.remove('show');
@@ -116,6 +117,12 @@ function filterBySearch() {
                (post.region && post.region.toLowerCase().includes(keywordLower));
     };
     
+    // 入力値が既存タグと完全一致する場合、自動的にタグ検索モードに
+    const isExactTagMatch = Array.from(availableTags).some(tag => tag.toLowerCase() === keywordLower);
+    if (isExactTagMatch && searchType === "content") {
+        searchType = "tag";
+    }
+    
     // 検索タイプに応じてフィルタリング
     let filtered;
     if (searchType === "tag") {
@@ -129,10 +136,20 @@ function filterBySearch() {
     if (titleEl) titleEl.innerText = `検索: "${escapeHtml(keyword)}"`;
     
     if (filtered.length === 0) {
-        container.innerHTML = "<p style='padding:20px'>検索結果が見つからなかったのよ。別のキーワードで試してみてね。</p>";
+        container.innerHTML = `
+            <div class="empty-state" style="text-align: center; padding: 60px 20px;">
+                <img src="assets/images/cygewinne/ofuton.webp" alt="リラックス中のシグウィン" style="width: 150px; height: 150px; object-fit: contain; margin: 0 auto 20px; display: block;">
+                <p style="font-size: 1.2em; color: var(--cyan); margin-bottom: 10px;">見つからなかったのよ…</p>
+                <p style="color: var(--comment);">「${escapeHtml(keyword)}」の検索結果がないわ。別のキーワードで試してみてね💉</p>
+            </div>
+        `;
     } else {
-        container.innerHTML = "";
-        filtered.forEach(p => container.appendChild(createCardElement(p)));
+        let html = "";
+        filtered.forEach(p => html += createCardHtml(p, true));
+        container.innerHTML = html;
+        
+        // Twitter Widgetsを初期化
+        initTwitterWidgets();
     }
     
     const suggestions = document.getElementById('search-suggestions');
