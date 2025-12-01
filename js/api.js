@@ -65,7 +65,7 @@ async function fetchData(btnElement = null) {
             setupFormOptions();
             
             if (btnElement) {
-                showToast('データを更新しました', 'success', 2000);
+                showToast('データを更新したわよ！最新の診断結果なの💉', 'success', 2000);
             }
         } catch (e) {
             console.error("JSON Parse Error:", e, text);
@@ -84,7 +84,7 @@ async function fetchData(btnElement = null) {
                     <button onclick="fetchData()" style="margin-top:10px; padding:5px 15px; cursor:pointer;" aria-label="再読み込み">再診する</button>
                 </div>`;
         } else {
-            showToast('更新に失敗しました。しばらく待ってから再試行してください。', 'error');
+            showToast('更新に失敗しちゃったわ。少し休んでから、もう一度試してちょうだい', 'error');
         }
     } finally {
         if (btnElement) {

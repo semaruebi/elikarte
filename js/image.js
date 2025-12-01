@@ -49,6 +49,57 @@ function removeImageFile(index) {
     updateImageInput();
 }
 
+/**
+ * 画像プレビューアイテムを作成
+ */
+function createPreviewItem(imageSrc, altText, removeCallback, isExisting = false) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'preview-item';
+    wrapper.style.position = 'relative';
+    wrapper.style.display = 'inline-block';
+    
+    const img = document.createElement('img');
+    img.src = imageSrc;
+    img.className = 'preview-img';
+    img.alt = altText;
+    img.setAttribute('loading', 'lazy');
+    
+    if (isExisting) {
+        img.style.cursor = 'pointer';
+        img.onclick = () => {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-image');
+            if (modal && modalImg) {
+                modalImg.src = imageSrc;
+                modal.style.display = 'flex';
+                modal.setAttribute('aria-hidden', 'false');
+                modal.setAttribute('tabindex', '0');
+                modal.focus();
+            }
+        };
+    }
+    
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'preview-remove-btn';
+    removeBtn.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i>';
+    removeBtn.setAttribute('aria-label', isExisting ? '既存画像を削除' : '画像を削除');
+    removeBtn.onclick = removeCallback;
+    
+    wrapper.appendChild(img);
+    wrapper.appendChild(removeBtn);
+    
+    if (isExisting) {
+        const label = document.createElement('div');
+        label.style.fontSize = '0.7em';
+        label.style.color = 'var(--comment)';
+        label.style.marginTop = '2px';
+        label.textContent = '既存';
+        wrapper.appendChild(label);
+    }
+    
+    return wrapper;
+}
+
 function updateImagePreview() {
     const preview = document.getElementById('image-preview');
     if (!preview) return;
@@ -58,78 +109,32 @@ function updateImagePreview() {
     // 既存の画像URLを表示（編集モード用）
     existingImageUrls.forEach((url, index) => {
         if (!url || url.trim() === '') return;
-        
-        const wrapper = document.createElement('div');
-        wrapper.className = 'preview-item';
-        wrapper.style.position = 'relative';
-        wrapper.style.display = 'inline-block';
-        
-        const img = document.createElement('img');
-        img.src = url;
-        img.className = 'preview-img';
-        img.alt = `既存画像 ${index + 1}`;
-        img.setAttribute('loading', 'lazy');
-        img.style.cursor = 'pointer';
-        img.onclick = () => {
-            const modal = document.getElementById('image-modal');
-            const modalImg = document.getElementById('modal-image');
-            if (modal && modalImg) {
-                modalImg.src = url;
-                modal.style.display = 'flex';
-                modal.setAttribute('aria-hidden', 'false');
-                modal.setAttribute('tabindex', '0');
-                modal.focus();
-            }
-        };
-        
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'preview-remove-btn';
-        removeBtn.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i>';
-        removeBtn.setAttribute('aria-label', '既存画像を削除');
-        removeBtn.onclick = () => {
-            existingImageUrls.splice(index, 1);
-            updateImagePreview();
-        };
-        
-        const label = document.createElement('div');
-        label.style.fontSize = '0.7em';
-        label.style.color = 'var(--comment)';
-        label.style.marginTop = '2px';
-        label.textContent = '既存';
-        
-        wrapper.appendChild(img);
-        wrapper.appendChild(removeBtn);
-        wrapper.appendChild(label);
-        preview.appendChild(wrapper);
+        const item = createPreviewItem(
+            url,
+            `既存画像 ${index + 1}`,
+            () => {
+                existingImageUrls.splice(index, 1);
+                updateImagePreview();
+            },
+            true
+        );
+        preview.appendChild(item);
     });
     
     // 新規選択されたファイルを表示
     selectedImageFiles.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = evt => {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'preview-item';
-            wrapper.style.position = 'relative';
-            wrapper.style.display = 'inline-block';
-            
-            const img = document.createElement('img');
-            img.src = evt.target.result;
-            img.className = 'preview-img';
-            img.alt = `プレビュー画像 ${index + 1}`;
-            img.setAttribute('loading', 'lazy');
-            
-            const removeBtn = document.createElement('button');
-            removeBtn.className = 'preview-remove-btn';
-            removeBtn.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i>';
-            removeBtn.setAttribute('aria-label', '画像を削除');
-            removeBtn.onclick = () => removeImageFile(index);
-            
-            wrapper.appendChild(img);
-            wrapper.appendChild(removeBtn);
-            preview.appendChild(wrapper);
+            const item = createPreviewItem(
+                evt.target.result,
+                `プレビュー画像 ${index + 1}`,
+                () => removeImageFile(index),
+                false
+            );
+            preview.appendChild(item);
         };
         reader.onerror = () => {
-            showToast(`${file.name}の読み込みに失敗しました`, 'error');
+            showToast(`${file.name}の読み込みに失敗しちゃったわ。もう一度試してね`, 'error');
         };
         reader.readAsDataURL(file);
     });

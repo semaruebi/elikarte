@@ -31,49 +31,51 @@
     --bg-sidebar-trans: rgba(40, 42, 54, 0.95);
 }
 
-/* ☀️ ライトテーマ（Atom One Light Modern） */
+/* ☀️ ライトテーマ（シグウィン・デイタイム） */
 [data-theme="light"] {
-    --bg-main: #fafbfc; 
-    --bg-sidebar: #ffffff;
-    --fg-primary: #1a1a1a;
-    --current-line: #f5f7fa; 
-    --comment: #8b949e;
+    --bg-main: #f0faff; 
+    --bg-sidebar: #fafeff;
+    --fg-primary: #1e3a5f;
+    --current-line: #e6f7ff; 
+    --comment: #6b8aaa;
     
-    --cyan: #0969da; 
-    --green: #1a7f37;
-    --orange: #d1242f;
-    --pink: #d1242f;
-    --purple: #8250df;
-    --red: #cf222e;
+    --cyan: #22d3ee; 
+    --green: #34d399;
+    --orange: #fbbf24;
+    --pink: #ec4899;
+    --purple: #a78bfa;
+    --red: #f43f5e;
     
     --input-bg: #ffffff;
-    --border-color: #d0d7de;
-    --shadow: 0 2px 8px rgba(0,0,0,0.05);
+    --border-color: #bfdbfe;
+    --shadow: 0 4px 12px rgba(34, 211, 238, 0.15);
     --badge-text: #ffffff;
     --card-radius: 12px;
-    --bg-sidebar-trans: rgba(255, 255, 255, 0.98);
+    --bg-sidebar-trans: rgba(250, 254, 255, 0.98);
 }
 
 /* 🍬 おシグテーマ（シグウィン・パステル） */
 [data-theme="sigewinne"] {
-    --bg-main: #fef7ff;
-    --bg-sidebar: #ffffff;
-    --fg-primary: #4a2c5a;
-    --current-line: #f5e6ff;
-    --comment: #b8a5c7;
+    --bg-main: #fef3ff;
+    --bg-sidebar: #fff8fe;
+    --fg-primary: #3d1a4d;
+    --current-line: #fae8ff;
+    --comment: #8b6b9b;
     
-    --cyan: #7dd3fc;
-    --green: #86efac;
-    --orange: #fbbf24;
-    --pink: #f9a8d4;
-    --purple: #c084fc;
-    --red: #f87171;
+    --cyan: #22d3ee;
+    --green: #34d399;
+    --orange: #f59e0b;
+    --pink: #ec4899;
+    --purple: #a855f7;
+    --red: #ef4444;
     
     --input-bg: #ffffff;
-    --border-color: #e9d5ff;
-    --shadow: 0 2px 8px rgba(192, 132, 252, 0.15);
+    --border-color: #f5d0fe;
+    --shadow: 0 4px 16px rgba(253, 164, 212, 0.25);
     --badge-text: #ffffff;
-    --card-radius: 12px;
-    --bg-sidebar-trans: rgba(255, 255, 255, 0.98);
+    --card-radius: 16px;
+    --bg-sidebar-trans: rgba(255, 248, 254, 0.98);
 }
+
+
 

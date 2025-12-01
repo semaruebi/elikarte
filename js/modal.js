@@ -45,72 +45,70 @@ function closeImageModal() {
     }, 300);
 }
 
-function toggleAboutModal() {
-    const modal = document.getElementById('about-modal');
+/**
+ * モーダルを開く共通処理
+ */
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
     if (!modal) return;
-    
+    modal.style.display = "flex";
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    const closeBtn = modal.querySelector('.modal-close');
+    if (closeBtn) {
+        setTimeout(() => closeBtn.focus(), 100);
+    }
+}
+
+/**
+ * モーダルを閉じる共通処理
+ */
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    setTimeout(() => {
+        modal.style.display = "none";
+    }, 300);
+}
+
+/**
+ * モーダルの開閉を切り替える共通処理
+ */
+function toggleModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
     const isHidden = modal.getAttribute('aria-hidden') === 'true';
     if (isHidden) {
-        openAboutModal();
+        openModal(modalId);
     } else {
-        closeAboutModal();
+        closeModal(modalId);
     }
+}
+
+function toggleAboutModal() {
+    toggleModal('about-modal');
 }
 
 function openAboutModal() {
-    const modal = document.getElementById('about-modal');
-    if (!modal) return;
-    modal.style.display = "flex";
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('modal-open');
-    const closeBtn = modal.querySelector('.modal-close');
-    if (closeBtn) {
-        setTimeout(() => closeBtn.focus(), 100);
-    }
+    openModal('about-modal');
 }
 
 function closeAboutModal() {
-    const modal = document.getElementById('about-modal');
-    if (!modal) return;
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('modal-open');
-    setTimeout(() => {
-        modal.style.display = "none";
-    }, 300);
+    closeModal('about-modal');
 }
 
 function toggleContactForm() {
-    const modal = document.getElementById('contact-modal');
-    if (!modal) return;
-    
-    const isHidden = modal.getAttribute('aria-hidden') === 'true';
-    if (isHidden) {
-        openContactForm();
-    } else {
-        closeContactForm();
-    }
+    toggleModal('contact-modal');
 }
 
 function openContactForm() {
-    const modal = document.getElementById('contact-modal');
-    if (!modal) return;
-    modal.style.display = "flex";
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('modal-open');
-    const closeBtn = modal.querySelector('.modal-close');
-    if (closeBtn) {
-        setTimeout(() => closeBtn.focus(), 100);
-    }
+    openModal('contact-modal');
 }
 
 function closeContactForm() {
-    const modal = document.getElementById('contact-modal');
-    if (!modal) return;
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('modal-open');
-    setTimeout(() => {
-        modal.style.display = "none";
-    }, 300);
+    closeModal('contact-modal');
 }
 
 function handleRouteImageClick(element) {
@@ -146,26 +144,11 @@ function openRouteDetailModal(imageUrl, routeName, regionName, description) {
         }
     }
     
-    modal.style.display = "flex";
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('modal-open');
-    
-    const closeBtn = modal.querySelector('.modal-close');
-    if (closeBtn) {
-        setTimeout(() => closeBtn.focus(), 100);
-    }
+    openModal('route-detail-modal');
 }
 
 function closeRouteDetailModal() {
-    const modal = document.getElementById('route-detail-modal');
-    if (!modal) return;
-    
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('modal-open');
-    
-    setTimeout(() => {
-        modal.style.display = "none";
-    }, 300);
+    closeModal('route-detail-modal');
 }
 
 // キーボード操作対応（ESCキー）

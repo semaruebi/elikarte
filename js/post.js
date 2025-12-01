@@ -6,38 +6,32 @@
 let editingPostId = null;
 let editingPostData = null;
 
-async function postData() {
-    // 既に投稿処理中の場合は無視
-    if (isPosting) {
-        showToast("投稿処理中よ。じっとしててね…", 'warning');
-        return;
-    }
-    
-    const btn = document.querySelector("#post-form-container button");
-    if (!btn) return;
-    
-    // バリデーションチェック
+/**
+ * フォームのバリデーション処理
+ */
+function validatePostForm(isUpdate = false) {
     const title = document.getElementById("input-title")?.value.trim() || "";
     const region = document.getElementById("input-region")?.value || "";
     const route = document.getElementById("input-route")?.value || "";
     const content = document.getElementById("input-content")?.value.trim() || "";
+    const password = document.getElementById("input-password")?.value.trim() || "";
     
     if (!title) {
         showToast("タイトルを入力してちょうだい。", 'warning');
-        return;
+        return null;
     }
     
     const regEl = document.querySelector('input[name="tag_reg"]:checked');
     if (!regEl) {
         showToast("「レギュレーション」を選択してちょうだい。健康管理はウチが担当するのよ。", 'warning');
-        return;
+        return null;
     }
     const tagReg = regEl.value;
     
     const costEl = document.querySelector('input[name="tag_cost"]:checked');
     if (!costEl) {
         showToast("「Cost」を選択してちょうだい。健康管理はウチが担当するのよ。", 'warning');
-        return;
+        return null;
     }
     const tagCost = costEl.value;
     
@@ -51,29 +45,45 @@ async function postData() {
     
     const allTags = [tagReg, tagCost, ...tagsOpt];
     
-    // パスワード取得（必須）
-    const password = document.getElementById("input-password")?.value.trim() || "";
     if (!password) {
         showToast("パスワードを入力してちょうだい。後から削除・編集する際に必要なのよ。", 'warning');
-        return;
+        return null;
     }
     
-    if (!region || !route || (!content && selectedImageFiles.length === 0)) {
+    const totalImages = existingImageUrls.length + selectedImageFiles.length;
+    if (!region || !route || (!content && totalImages === 0)) {
         showToast("内容を入力してちょうだい。見せてちょうだい。", 'warning');
-        return;
+        return null;
     }
     
-    if (selectedImageFiles.length > CONFIG.MAX_IMAGES) {
+    if (totalImages > CONFIG.MAX_IMAGES) {
         showToast(`画像は${CONFIG.MAX_IMAGES}枚までなのよ。転ばないように。`, 'warning');
-        return;
+        return null;
     }
     
     for (let f of selectedImageFiles) {
         if (f.size > CONFIG.MAX_IMAGE_SIZE) {
             showToast("2MB以下の画像にしてちょうだい。", 'warning');
-            return;
+            return null;
         }
     }
+    
+    return { title, region, route, content, password, allTags };
+}
+
+async function postData() {
+    // 既に投稿処理中の場合は無視
+    if (isPosting) {
+        showToast("投稿処理中よ。じっとしててね…", 'warning');
+        return;
+    }
+    
+    const btn = document.querySelector("#post-form-container button");
+    if (!btn) return;
+    
+    // バリデーションチェック
+    const formData = validatePostForm(false);
+    if (!formData) return;
     
     // バリデーション通過後、投稿処理を開始
     isPosting = true;
@@ -106,13 +116,13 @@ async function postData() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 action: "create",
-                title: title,
-                region: region,
-                route: route,
-                content: content,
+                title: formData.title,
+                region: formData.region,
+                route: formData.route,
+                content: formData.content,
                 images: images,
-                tags: allTags,
-                password: password
+                tags: formData.allTags,
+                password: formData.password
             })
         });
         
@@ -139,7 +149,7 @@ async function postData() {
         setTimeout(() => fetchData(), 2000);
     } catch (err) {
         console.error("Post error:", err);
-        showToast("投稿に失敗しました。もう一度お試しください。", 'error');
+        showToast("あら、投稿に失敗しちゃったみたい。もう一度試してみてちょうだい", 'error');
     } finally {
         isPosting = false;
         btn.disabled = originalDisabled;
@@ -174,7 +184,7 @@ async function editPost(id) {
     // 投稿データを取得
     const post = allData.posts.find(p => p.id === id);
     if (!post) {
-        showToast("投稿が見つかりませんでした", 'error');
+        showToast("あら、その投稿は見つからなかったわ", 'error');
         return;
     }
     
@@ -319,58 +329,8 @@ async function updatePost(id, password) {
     if (!btn) return;
     
     // バリデーションチェック
-    const title = document.getElementById("input-title")?.value.trim() || "";
-    const region = document.getElementById("input-region")?.value || "";
-    const route = document.getElementById("input-route")?.value || "";
-    const content = document.getElementById("input-content")?.value.trim() || "";
-    
-    if (!title) {
-        showToast("タイトルを入力してちょうだい。", 'warning');
-        return;
-    }
-    
-    const regEl = document.querySelector('input[name="tag_reg"]:checked');
-    if (!regEl) {
-        showToast("「レギュレーション」を選択するのよ。", 'warning');
-        return;
-    }
-    const tagReg = regEl.value;
-    
-    const costEl = document.querySelector('input[name="tag_cost"]:checked');
-    if (!costEl) {
-        showToast("「Cost」を選択するのよ。", 'warning');
-        return;
-    }
-    const tagCost = costEl.value;
-    
-    const optEls = document.querySelectorAll('input[name="tag_opt"]:checked');
-    const tagsOpt = Array.from(optEls).map(el => el.value);
-    
-    const free1 = document.getElementById('tag-free-1')?.value.trim() || "";
-    const free2 = document.getElementById('tag-free-2')?.value.trim() || "";
-    if (free1) tagsOpt.push(free1);
-    if (free2) tagsOpt.push(free2);
-    
-    const allTags = [tagReg, tagCost, ...tagsOpt];
-    
-    // 既存の画像と新規画像の合計をチェック
-    const totalImages = existingImageUrls.length + selectedImageFiles.length;
-    if (totalImages > CONFIG.MAX_IMAGES) {
-        showToast(`画像は${CONFIG.MAX_IMAGES}枚までなのよ。`, 'warning');
-        return;
-    }
-    
-    if (!region || !route || (!content && totalImages === 0)) {
-        showToast("内容を入力してちょうだい。見せてちょうだい。", 'warning');
-        return;
-    }
-    
-    for (let f of selectedImageFiles) {
-        if (f.size > CONFIG.MAX_IMAGE_SIZE) {
-            showToast("2MB以下の画像にしてちょうだい。", 'warning');
-            return;
-        }
-    }
+    const formData = validatePostForm(true);
+    if (!formData) return;
     
     // バリデーション通過後、更新処理を開始
     isPosting = true;
@@ -404,14 +364,14 @@ async function updatePost(id, password) {
             body: JSON.stringify({
                 action: "update",
                 id: id,
-                title: title,
-                region: region,
-                route: route,
-                content: content,
+                title: formData.title,
+                region: formData.region,
+                route: formData.route,
+                content: formData.content,
                 images: images,
                 existingImageUrls: existingImageUrls,
-                tags: allTags,
-                password: password
+                tags: formData.allTags,
+                password: formData.password
             })
         });
         

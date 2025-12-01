@@ -38,7 +38,7 @@
             
             <div class="search-box" role="search">
                 <i class="fas fa-search" aria-hidden="true"></i>
-                <input type="text" id="search-input" placeholder="検索..." onkeyup="handleSearchInput()" onfocus="showSuggestions()" autocomplete="off" aria-label="検索" aria-autocomplete="list" aria-controls="search-suggestions">
+                <input type="text" id="search-input" placeholder="何を探してるの？" onkeyup="handleSearchInput()" onfocus="showSuggestions()" autocomplete="off" aria-label="検索" aria-autocomplete="list" aria-controls="search-suggestions">
                 <div id="search-suggestions" class="search-suggestions" role="listbox" aria-label="検索候補"></div>
                 <div id="search-type-selector" class="search-type-selector" style="display: none;">
                     <label class="search-type-option">
@@ -65,14 +65,14 @@
         <section id="post-form-container" class="post-area closed" style="display:block;" aria-label="投稿フォーム" aria-expanded="false">
             <div class="post-header" onclick="togglePostForm()" role="button" tabindex="0" aria-label="投稿フォームを開く/閉じる">
                 <div class="post-header-title">
-                    <i class="fas fa-feather-alt" aria-hidden="true"></i> 精鋭ノートを書く
+                    <i class="fas fa-feather-alt" aria-hidden="true"></i> 精鋭ノートを書くのよ💉
                 </div>
                 <i class="fas fa-chevron-down post-toggle-icon" aria-hidden="true"></i>
             </div>
             
             <div class="post-content-wrapper">
                 <div class="input-row">
-                    <input type="text" id="input-title" placeholder="タイトル" aria-label="投稿タイトル" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--fg-primary); font-size: 1.1em;">
+                    <input type="text" id="input-title" placeholder="タイトルを入れてちょうだい" aria-label="投稿タイトル" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--input-bg); color: var(--fg-primary); font-size: 1.1em;">
                 </div>
                 <div class="input-row">
                     <select id="input-region" disabled aria-label="地域を選択"><option>エリアを選択</option></select>
@@ -104,8 +104,8 @@
                     </div>
                     <span class="tag-label">自由タグ (最大2つ)</span>
                     <div class="free-tags-row">
-                        <input type="text" id="tag-free-1" placeholder="自由タグ1" aria-label="自由タグ1">
-                        <input type="text" id="tag-free-2" placeholder="自由タグ2" aria-label="自由タグ2">
+                        <input type="text" id="tag-free-1" placeholder="自由に書いていいのよ" aria-label="自由タグ1">
+                        <input type="text" id="tag-free-2" placeholder="もう1つ追加できるわ" aria-label="自由タグ2">
                     </div>
                 </div>
 
@@ -167,7 +167,7 @@
                         <i class="fas fa-lock" aria-hidden="true"></i> 投稿パスワード <span style="color: var(--accent);">（必須）</span>
                     </label>
                     <div class="password-input-wrapper">
-                        <input type="password" id="input-password" placeholder="後から削除・編集する際に使用します" aria-label="投稿パスワード" required>
+                        <input type="password" id="input-password" placeholder="後から編集・削除する時に必要なのよ" aria-label="投稿パスワード" required>
                         <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility()" aria-label="パスワードを表示/非表示" title="パスワードを表示/非表示">
                             <i class="fas fa-eye" id="password-toggle-icon" aria-hidden="true"></i>
                         </button>
@@ -190,9 +190,9 @@
 
         <footer role="contentinfo">
             <div class="footer-content">
-                <p>当サイトは原神（Genshin Impact）の非公式ファンサイトなのよ。</p>
+                <p>当サイトは原神（Genshin Impact）の非公式ファンサイトなのよ💉</p>
                 <p>
-                    開発者: <a href="https://x.com/_c_aca" target="_blank">@_c_aca</a> | Powered by GAS
+                    開発者: <a href="https://x.com/_c_aca" target="_blank">@_c_aca</a> | Powered by GAS ✨
                 </p>
                 <div class="footer-buttons">
                     <button onclick="toggleAboutModal()" class="about-btn" aria-label="このサイトについてを開く">
@@ -239,9 +239,9 @@
                     <h4><i class="fas fa-palette" aria-hidden="true"></i> テーマ</h4>
                     <p>3つのテーマから選べるのよ：</p>
                     <ul>
-                        <li><strong>Dark (Dracula)</strong>: ダークテーマ</li>
-                        <li><strong>Light (Atom)</strong>: ライトテーマ</li>
-                        <li><strong>Sigewinne</strong>: おシグテーマ</li>
+                        <li><strong>🌙 夜の診療所</strong>: ダークテーマ（Dracula風）- 目に優しい夜モードなのよ</li>
+                        <li><strong>☀️ シグウィンデイタイム</strong>: 爽やかな水色で朝の診療所みたいなの</li>
+                        <li><strong>💖 おシグテーマ</strong>: ピンク×パープルの夢見る世界よ✨ ウチのお気に入りなの</li>
                     </ul>
                 </div>
                 <div class="about-section">
@@ -266,7 +266,7 @@
                 <div class="about-section">
                     <h4><i class="fas fa-user-circle" aria-hidden="true"></i> 開発者</h4>
                     <p>開発者: <a href="https://x.com/_c_aca" target="_blank" rel="noopener noreferrer">@_c_aca</a></p>
-                    <p>要望やバグ報告は「要望・問い合わせ」フォームから送ってね。</p>
+                    <p>要望やバグ報告は「要望・問い合わせ」フォームから送ってちょうだい。ウチがちゃんと診てあげるわ💉</p>
                 </div>
             </div>
             <div class="about-modal-footer">
@@ -287,7 +287,7 @@
             <form id="contact-form" onsubmit="submitContact(event)" aria-label="要望・問い合わせフォーム">
                 <div class="contact-form-group">
                     <label for="contact-name">お名前（任意）</label>
-                    <input type="text" id="contact-name" placeholder="お名前" aria-label="お名前">
+                    <input type="text" id="contact-name" placeholder="お名前を教えてちょうだい（任意よ）" aria-label="お名前">
                 </div>
                 <div class="contact-form-group">
                     <label for="contact-type">種類 <span style="color: var(--red);">*</span></label>
@@ -301,7 +301,7 @@
                 </div>
                 <div class="contact-form-group">
                     <label for="contact-message">内容 <span style="color: var(--red);">*</span></label>
-                    <textarea id="contact-message" rows="8" placeholder="要望や問い合わせ内容を入力してください..." required aria-label="問い合わせ内容"></textarea>
+                    <textarea id="contact-message" rows="8" placeholder="要望や問い合わせ内容を見せてちょうだい..." required aria-label="問い合わせ内容"></textarea>
                 </div>
                 <div class="contact-form-actions">
                     <button type="button" onclick="closeContactForm()" class="contact-cancel-btn" aria-label="キャンセル">キャンセル</button>

@@ -270,13 +270,16 @@ function showReplyForm(postId, commentId) {
     form.setAttribute('aria-hidden', isVisible);
 }
 
-function toggleCommentLike(commentId, btn) {
-    const isLiked = myLikedComments.includes(commentId);
+/**
+ * いいね機能の共通処理
+ */
+function handleLikeToggle(id, btn, likedArray, storageKey, actionPrefix) {
+    const isLiked = likedArray.includes(id);
     const countSpan = btn.querySelector("span") || btn;
     const icon = btn.querySelector("i");
+    const current = parseInt(countSpan.innerText) || 0;
     
     if (isLiked) {
-        const current = parseInt(countSpan.innerText) || 0;
         const newCount = Math.max(0, current - 1);
         if (countSpan.tagName === 'SPAN') {
             countSpan.innerText = newCount;
@@ -287,20 +290,19 @@ function toggleCommentLike(commentId, btn) {
         if (icon) icon.className = "far fa-heart";
         btn.setAttribute('aria-label', 'いいね');
         
-        const index = myLikedComments.indexOf(commentId);
+        const index = likedArray.indexOf(id);
         if (index > -1) {
-            myLikedComments.splice(index, 1);
-            localStorage.setItem('rta_liked_comments', JSON.stringify(myLikedComments));
+            likedArray.splice(index, 1);
+            localStorage.setItem(storageKey, JSON.stringify(likedArray));
         }
         
         fetch(CONFIG.GAS_API_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "unlikeComment", id: commentId })
-        }).catch(err => console.error("Unlike comment error:", err));
+            body: JSON.stringify({ action: `unlike${actionPrefix}`, id: id })
+        }).catch(err => console.error(`Unlike ${actionPrefix.toLowerCase()} error:`, err));
     } else {
-        const current = parseInt(countSpan.innerText) || 0;
         const newCount = current + 1;
         if (countSpan.tagName === 'SPAN') {
             countSpan.innerText = newCount;
@@ -311,59 +313,23 @@ function toggleCommentLike(commentId, btn) {
         if (icon) icon.className = "fas fa-heart";
         btn.setAttribute('aria-label', 'いいねを取り消す');
         
-        myLikedComments.push(commentId);
-        localStorage.setItem('rta_liked_comments', JSON.stringify(myLikedComments));
+        likedArray.push(id);
+        localStorage.setItem(storageKey, JSON.stringify(likedArray));
         
         fetch(CONFIG.GAS_API_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "likeComment", id: commentId })
-        }).catch(err => console.error("Like comment error:", err));
+            body: JSON.stringify({ action: `like${actionPrefix}`, id: id })
+        }).catch(err => console.error(`Like ${actionPrefix.toLowerCase()} error:`, err));
     }
 }
 
+function toggleCommentLike(commentId, btn) {
+    handleLikeToggle(commentId, btn, myLikedComments, 'rta_liked_comments', 'Comment');
+}
+
 function toggleLike(id, btn) {
-    const isLiked = myLikedPosts.includes(id);
-    const countSpan = btn.querySelector("span");
-    const icon = btn.querySelector("i");
-    
-    if (isLiked) {
-        const current = parseInt(countSpan.innerText) || 0;
-        const newCount = Math.max(0, current - 1);
-        countSpan.innerText = newCount;
-        btn.classList.remove("liked");
-        if (icon) icon.className = "far fa-heart";
-        btn.setAttribute('aria-label', 'いいね');
-        
-        const index = myLikedPosts.indexOf(id);
-        if (index > -1) {
-            myLikedPosts.splice(index, 1);
-            localStorage.setItem('rta_liked_posts', JSON.stringify(myLikedPosts));
-        }
-        
-        fetch(CONFIG.GAS_API_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "unlike", id: id })
-        }).catch(err => console.error("Unlike error:", err));
-    } else {
-        const current = parseInt(countSpan.innerText) || 0;
-        countSpan.innerText = current + 1;
-        btn.classList.add("liked");
-        if (icon) icon.className = "fas fa-heart";
-        btn.setAttribute('aria-label', 'いいねを取り消す');
-        
-        myLikedPosts.push(id);
-        localStorage.setItem('rta_liked_posts', JSON.stringify(myLikedPosts));
-        
-        fetch(CONFIG.GAS_API_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "like", id: id })
-        }).catch(err => console.error("Like error:", err));
-    }
+    handleLikeToggle(id, btn, myLikedPosts, 'rta_liked_posts', '');
 }
 

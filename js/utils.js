@@ -38,13 +38,11 @@ function debounce(func, wait) {
 /**
  * リトライ付きフェッチ
  */
-let retryCount = 0;
 async function fetchWithRetry(url, options = {}, retries = CONFIG.MAX_RETRIES) {
     for (let i = 0; i < retries; i++) {
         try {
             const response = await fetch(url, options);
             if (response.ok || options.mode === 'no-cors') {
-                retryCount = 0;
                 return response;
             }
             throw new Error(`HTTP ${response.status}`);
@@ -218,54 +216,25 @@ function getRegionClass(region) {
     if (!region) return "badge-default";
     
     const regionLower = region.toLowerCase();
+    const regionMap = [
+        { keywords: ["層岩", "巨淵", "chasm"], class: "badge-chasm" },
+        { keywords: ["淵下宮", "enkanomiya"], class: "badge-enkanomiya" },
+        { keywords: ["鶴観", "tsurumi"], class: "badge-tsurumi" },
+        { keywords: ["沈玉", "chenyu", "谷"], class: "badge-chenyu" },
+        { keywords: ["モンド", "mondstadt"], class: "badge-mondstadt" },
+        { keywords: ["璃月", "liyue"], class: "badge-liyue" },
+        { keywords: ["稲妻", "inazuma"], class: "badge-inazuma" },
+        { keywords: ["スメール", "sumeru"], class: "badge-sumeru" },
+        { keywords: ["フォンテーヌ", "fontaine"], class: "badge-fontaine" },
+        { keywords: ["ナタ", "natlan"], class: "badge-natlan" },
+        { keywords: ["スネージナヤ", "snezhnaya"], class: "badge-snezhnaya" },
+        { keywords: ["ナド", "クライ", "nadoh", "kuraibōn"], class: "badge-nadoh" }
+    ];
     
-    // 層岩巨淵（Chasm）
-    if (regionLower.includes("層岩") || regionLower.includes("巨淵") || regionLower.includes("chasm")) {
-        return "badge-chasm";
-    }
-    // 淵下宮（Enkanomiya）
-    if (regionLower.includes("淵下宮") || regionLower.includes("enkanomiya")) {
-        return "badge-enkanomiya";
-    }
-    // 鶴観（Tsurumi）
-    if (regionLower.includes("鶴観") || regionLower.includes("tsurumi")) {
-        return "badge-tsurumi";
-    }
-    // 沈玉の谷（Chenyu Vale）
-    if (regionLower.includes("沈玉") || regionLower.includes("chenyu") || regionLower.includes("谷")) {
-        return "badge-chenyu";
-    }
-    // モンド（Mondstadt）
-    if (regionLower.includes("モンド") || regionLower.includes("mondstadt")) {
-        return "badge-mondstadt";
-    }
-    // 璃月（Liyue）
-    if (regionLower.includes("璃月") || regionLower.includes("liyue")) {
-        return "badge-liyue";
-    }
-    // 稲妻（Inazuma）
-    if (regionLower.includes("稲妻") || regionLower.includes("inazuma")) {
-        return "badge-inazuma";
-    }
-    // スメール（Sumeru）
-    if (regionLower.includes("スメール") || regionLower.includes("sumeru")) {
-        return "badge-sumeru";
-    }
-    // フォンテーヌ（Fontaine）
-    if (regionLower.includes("フォンテーヌ") || regionLower.includes("fontaine")) {
-        return "badge-fontaine";
-    }
-    // ナタ（Natlan）
-    if (regionLower.includes("ナタ") || regionLower.includes("natlan")) {
-        return "badge-natlan";
-    }
-    // スネージナヤ（Snezhnaya）
-    if (regionLower.includes("スネージナヤ") || regionLower.includes("snezhnaya")) {
-        return "badge-snezhnaya";
-    }
-    // ナド・クライ（Nadoh/Kuraibōn）
-    if (regionLower.includes("ナド") || regionLower.includes("クライ") || regionLower.includes("nadoh") || regionLower.includes("kuraibōn")) {
-        return "badge-nadoh";
+    for (const { keywords, class: className } of regionMap) {
+        if (keywords.some(keyword => regionLower.includes(keyword))) {
+            return className;
+        }
     }
     
     return "badge-default";

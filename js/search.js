@@ -105,35 +105,25 @@ function filterBySearch() {
     const hasExactTag = (tagsString, searchTag) => {
         if (!tagsString || !searchTag) return false;
         const tagArray = tagsString.split(',').map(t => t.trim().toLowerCase());
-        const searchTagLower = searchTag.toLowerCase();
-        return tagArray.includes(searchTagLower);
+        return tagArray.includes(searchTag.toLowerCase());
     };
     
-    let filtered;
+    // 本文検索用のヘルパー関数
+    const matchesContent = (post) => {
+        return (post.content && post.content.toLowerCase().includes(keywordLower)) ||
+               (post.title && post.title.toLowerCase().includes(keywordLower)) ||
+               (post.route && post.route.toLowerCase().includes(keywordLower)) ||
+               (post.region && post.region.toLowerCase().includes(keywordLower));
+    };
     
     // 検索タイプに応じてフィルタリング
+    let filtered;
     if (searchType === "tag") {
-        // タグ検索のみ
-        filtered = allData.posts.filter(p => 
-            p.tags && hasExactTag(p.tags, keyword)
-        );
+        filtered = allData.posts.filter(p => p.tags && hasExactTag(p.tags, keyword));
     } else if (searchType === "content") {
-        // 本文検索のみ（content, route, region）
-        filtered = allData.posts.filter(p => 
-            (p.content && p.content.toLowerCase().includes(keywordLower)) ||
-            (p.title && p.title.toLowerCase().includes(keywordLower)) ||
-            (p.route && p.route.toLowerCase().includes(keywordLower)) ||
-            (p.region && p.region.toLowerCase().includes(keywordLower))
-        );
+        filtered = allData.posts.filter(matchesContent);
     } else {
-        // 両方（デフォルト）
-        filtered = allData.posts.filter(p => 
-            (p.content && p.content.toLowerCase().includes(keywordLower)) ||
-            (p.title && p.title.toLowerCase().includes(keywordLower)) ||
-            (p.tags && hasExactTag(p.tags, keyword)) ||
-            (p.route && p.route.toLowerCase().includes(keywordLower)) ||
-            (p.region && p.region.toLowerCase().includes(keywordLower))
-        );
+        filtered = allData.posts.filter(p => matchesContent(p) || (p.tags && hasExactTag(p.tags, keyword)));
     }
     
     if (titleEl) titleEl.innerText = `検索: "${escapeHtml(keyword)}"`;
