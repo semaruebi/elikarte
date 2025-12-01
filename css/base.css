@@ -1,0 +1,213 @@
+/* ============================================
+   ベーススタイル
+   ============================================ */
+
+/* ベーススタイル（PC向け） */
+body { 
+    margin: 0; 
+    font-family: var(--font-body), sans-serif; 
+    background-color: var(--bg-main); 
+    color: var(--fg-primary); 
+    display: flex; 
+    height: 100vh; 
+    overflow: hidden; 
+    overflow-x: hidden; 
+    transition: background-color 0.3s, color 0.3s;
+    position: relative;
+}
+
+/* 装飾的背景パターン */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(139, 233, 253, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 121, 198, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(189, 147, 249, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: backgroundShift 20s ease-in-out infinite;
+}
+
+[data-theme="light"] body::before {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(9, 105, 218, 0.01) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(130, 80, 223, 0.01) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(9, 105, 218, 0.01) 0%, transparent 50%);
+}
+
+[data-theme="sigewinne"] body::before {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(249, 168, 212, 0.02) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(192, 132, 252, 0.02) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(125, 211, 252, 0.02) 0%, transparent 50%);
+}
+
+@keyframes backgroundShift {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+main {
+    position: relative;
+    z-index: 1;
+}
+
+/* スクロールバー */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--comment); }
+
+/* コンテンツ一覧 */
+.content-scroll { flex: 1; overflow-y: auto; padding: 30px; }
+
+/* ローディング */
+.loading { text-align: center; color: var(--comment); margin-top: 50px; font-weight: bold; font-size: 1.2em; }
+
+/* フッター（固定・コンパクト版） */
+footer {
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    color: var(--comment);
+    font-size: 0.75em;
+    background-color: var(--bg-sidebar);
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+footer a { color: var(--cyan); text-decoration: none; font-weight: bold; }
+footer a:hover { text-decoration: underline; }
+footer p { margin: 3px 0; }
+.footer-content { max-width: 800px; margin: 0 auto; line-height: 1.4; }
+.copyright { margin-top: 5px; font-size: 0.9em; opacity: 0.8; }
+
+/* フッターボタン */
+.footer-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.about-btn,
+.contact-btn {
+    padding: 10px 20px;
+    background: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.about-btn:hover,
+.contact-btn:hover {
+    background: var(--pink);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.about-btn {
+    background: var(--cyan);
+}
+
+.about-btn:hover {
+    background: color-mix(in srgb, var(--cyan) 80%, black);
+}
+
+/* トースト通知システム */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow);
+    min-width: 280px;
+    max-width: 400px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+    pointer-events: auto;
+    font-size: 0.95em;
+    color: var(--fg-primary);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast i {
+    font-size: 1.2em;
+    flex-shrink: 0;
+}
+
+.toast-success {
+    border-left: 4px solid var(--green);
+}
+
+.toast-success i {
+    color: var(--green);
+}
+
+.toast-error {
+    border-left: 4px solid var(--red);
+}
+
+.toast-error i {
+    color: var(--red);
+}
+
+.toast-warning {
+    border-left: 4px solid var(--orange);
+}
+
+.toast-warning i {
+    color: var(--orange);
+}
+
+.toast-info {
+    border-left: 4px solid var(--cyan);
+}
+
+.toast-info i {
+    color: var(--cyan);
+}
+
+.toast span {
+    flex: 1;
+    line-height: 1.5;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+

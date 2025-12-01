@@ -1,0 +1,193 @@
+/* ============================================
+   レスポンシブ（モバイル・タブレット対応）
+   ============================================ */
+
+/* モバイル対応 */
+@media (max-width: 900px) {
+    body { 
+        flex-direction: column; 
+        height: auto; 
+        overflow-y: auto; 
+        -webkit-overflow-scrolling: touch; 
+        overflow-x: hidden;
+    }
+    
+    /* bodyがメニューで覆われている間のスクロールを禁止 */
+    body.sidebar-open {
+        overflow: hidden;
+    }
+
+    /* サイドバー: フルハイト固定、画面外に隠す */
+    aside { 
+        position: fixed; 
+        left: 0; 
+        top: 0; 
+        height: 100%; /* フルハイト */
+        width: 75vw; /* 幅を75%に */
+        border-right: 2px solid var(--purple); 
+        z-index: 2000; 
+        background-color: var(--bg-sidebar-trans); 
+        backdrop-filter: blur(5px); 
+        transform: translateX(-100%); 
+        transition: transform 0.3s ease-out;
+        box-shadow: 4px 0 10px rgba(0,0,0,0.3);
+    }
+
+    /* asideが開いたときの状態 */
+    aside.open {
+        transform: translateX(0%); 
+    }
+
+    /* サイドバーヘッダー（モバイル用：閉じるボタン配置） */
+    .sidebar-header {
+        padding: 10px 20px;
+        height: 60px; 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--bg-sidebar); 
+        flex-shrink: 0;
+    }
+    
+    /* PCでは非表示だったハンバーガーボタンを非表示に（移動済み） */
+    .mobile-menu-btn { display: flex !important; }
+
+    /* メインヘッダー: トップに固定 */
+    header { 
+        position: sticky;
+        top: 0; 
+        z-index: 900;
+        padding: 10px 15px; 
+    }
+
+    .header-actions {
+        align-items: center; 
+        gap: 15px;
+    }
+    
+    /* aside内の閉じるボタンを大きく表示 */
+    .mobile-close-btn { 
+        padding: 10px;
+        color: var(--pink);
+        background: var(--current-line);
+        font-size: 1.2em;
+    }
+
+    /* コンテンツエリアの調整 */
+    main { 
+        flex: none; 
+        height: auto; 
+        overflow: visible; 
+    }
+    
+    .content-scroll {
+        overflow-y: visible;
+        padding: 15px; 
+        height: auto;
+    }
+    
+    footer { padding-bottom: 40px; }
+    
+    /* 検索ボックス調整 */
+    .search-box { margin-right: 10px; flex: 1; justify-content: flex-end;}
+
+    .search-box input { 
+        width: 100%; 
+        max-width: 150px;
+        padding: 8px 10px 8px 30px; 
+        font-size: 0.85em; 
+        text-align: left;
+    }
+    
+    .search-box input:focus { max-width: 200px; }
+    
+    /* アイコンを左端に再配置 */
+    .search-box i { 
+        left: 10px; 
+        right: auto; 
+        font-size: 0.9em; 
+    }
+    
+    /* モーダルの調整 */
+    .modal-close {
+        font-size: 30px;
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .modal-content {
+        max-width: 98%;
+        max-height: 90%;
+    }
+
+    /* フッターボタン */
+    .footer-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .about-btn,
+    .contact-btn {
+        width: 100%;
+    }
+    
+    .about-modal-content,
+    .contact-modal-content {
+        width: 95%;
+        max-height: 95vh;
+        margin: 10px;
+    }
+    
+    .about-modal-header,
+    .contact-modal-header {
+        padding: 15px;
+    }
+    
+    .about-modal-body {
+        padding: 15px;
+    }
+    
+    #contact-form {
+        padding: 15px;
+    }
+    
+    .contact-form-actions {
+        flex-direction: column-reverse;
+    }
+    
+    .contact-submit-btn,
+    .contact-cancel-btn {
+        width: 100%;
+    }
+    
+    .about-close-btn {
+        width: 100%;
+    }
+
+    /* トースト通知 */
+    .toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .toast {
+        min-width: auto;
+        max-width: 100%;
+    }
+}
+
+/* PCではハンバーガーボタンを隠す */
+@media (min-width: 901px) {
+    .mobile-menu-btn {
+        display: none !important;
+    }
+    /* PCではサイドバー内の閉じるボタンも隠す */
+    .mobile-close-btn {
+        display: none !important;
+    }
+}
+
