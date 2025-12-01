@@ -102,11 +102,11 @@ function filterBySearch() {
     const container = document.getElementById("main-container");
     if (!container) return;
     
-    // タグの完全一致チェック用のヘルパー関数
-    const hasExactTag = (tagsString, searchTag) => {
-        if (!tagsString || !searchTag) return false;
+    // タグの部分一致チェック用のヘルパー関数
+    const hasPartialTag = (tagsString, searchKeyword) => {
+        if (!tagsString || !searchKeyword) return false;
         const tagArray = tagsString.split(',').map(t => t.trim().toLowerCase());
-        return tagArray.includes(searchTag.toLowerCase());
+        return tagArray.some(tag => tag.includes(searchKeyword.toLowerCase()));
     };
     
     // 本文検索用のヘルパー関数
@@ -117,21 +117,10 @@ function filterBySearch() {
                (post.region && post.region.toLowerCase().includes(keywordLower));
     };
     
-    // 入力値が既存タグと完全一致する場合、自動的にタグ検索モードに
-    const isExactTagMatch = Array.from(availableTags).some(tag => tag.toLowerCase() === keywordLower);
-    if (isExactTagMatch && searchType === "content") {
-        searchType = "tag";
-    }
-    
-    // 検索タイプに応じてフィルタリング
-    let filtered;
-    if (searchType === "tag") {
-        filtered = allData.posts.filter(p => p.tags && hasExactTag(p.tags, keyword));
-    } else if (searchType === "content") {
-        filtered = allData.posts.filter(matchesContent);
-    } else {
-        filtered = allData.posts.filter(p => matchesContent(p) || (p.tags && hasExactTag(p.tags, keyword)));
-    }
+    // 本文・タイトル・タグ全てを部分一致で検索
+    const filtered = allData.posts.filter(p => {
+        return matchesContent(p) || (p.tags && hasPartialTag(p.tags, keyword));
+    });
     
     if (titleEl) titleEl.innerText = `検索: "${escapeHtml(keyword)}"`;
     
