@@ -20,7 +20,7 @@
     <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
     
     <aside id="mobile-sidebar" role="navigation" aria-label="メインナビゲーション" aria-hidden="true">
-        <div class="sidebar-header" style="padding: 20px; font-family: var(--font-display);">
+        <div class="sidebar-header" onclick="showHome()" style="padding: 20px; font-family: var(--font-display); cursor: pointer;">
              <span style="color:var(--cyan);">TOPIC</span>
         </div>
         <div class="nav-list" id="sidebar-nav" role="list"></div>
@@ -241,7 +241,7 @@
                     <ul>
                         <li><strong>🌙 夜の診療所</strong>: ダークテーマ（Dracula風）- 目に優しい夜モードなのよ</li>
                         <li><strong>☀️ シグウィンデイタイム</strong>: 爽やかな水色で朝の診療所みたいなの</li>
-                        <li><strong>💖 おシグテーマ</strong>: ピンク×パープルの夢見る世界よ✨ ウチのお気に入りなの</li>
+                        <li><strong>💖 おシグテイスト</strong>: ピンク×パープルの夢見る世界よ✨ ウチのお気に入りなの</li>
                     </ul>
                 </div>
                 <div class="about-section">
@@ -343,6 +343,9 @@
     <script src="js/image.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/card.js"></script>
+    <script src="js/card-expand.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/drag-scroll.js"></script>
     <script src="js/post.js"></script>
     <script src="js/main.js"></script>
 </body>

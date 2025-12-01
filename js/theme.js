@@ -8,7 +8,7 @@ function cycleTheme() {
     const themes = [
         { name: 'dark', displayName: '夜の診療所', icon: 'fa-moon' },
         { name: 'light', displayName: 'シグウィンデイタイム', icon: 'fa-sun' },
-        { name: 'sigewinne', displayName: 'おシグテーマ', icon: 'fa-heart' }
+        { name: 'sigewinne', displayName: 'おシグテイスト', icon: 'fa-heart' }
     ];
     
     const currentIndex = themes.findIndex(t => t.name === current);
@@ -27,7 +27,7 @@ function cycleTheme() {
     }
     
     localStorage.setItem('rta_theme', nextTheme.name);
-    showToast(`テーマを「${nextTheme.displayName}」に切り替えたわよ✨`, 'success', 2000);
+    showToast(`テーマを「${nextTheme.displayName}」に切り替えたのよ✨`, 'success', 2000);
 }
 
 function loadTheme() {
@@ -40,7 +40,7 @@ function loadTheme() {
     const themeMap = {
         dark: { attr: null, icon: 'fa-moon', displayName: '夜の診療所' },
         light: { attr: 'light', icon: 'fa-sun', displayName: 'シグウィンデイタイム' },
-        sigewinne: { attr: 'sigewinne', icon: 'fa-heart', displayName: 'おシグテーマ' }
+        sigewinne: { attr: 'sigewinne', icon: 'fa-heart', displayName: 'おシグテイスト' }
     };
     
     const theme = themeMap[savedTheme] || themeMap.dark;

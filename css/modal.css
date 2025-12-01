@@ -8,7 +8,7 @@ body.modal-open { overflow: hidden; }
 .image-modal {
     display: none; 
     position: fixed; 
-    z-index: 2000; 
+    z-index: 10002; 
     left: 0;
     top: 0;
     width: 100%;
@@ -381,6 +381,61 @@ body.modal-open { overflow: hidden; }
     background: color-mix(in srgb, var(--purple) 80%, black);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* カード詳細モーダル */
+.card-detail-modal {
+    display: none;
+    position: fixed;
+    z-index: 10001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.card-detail-content {
+    background-color: var(--bg-sidebar);
+    border-radius: 16px;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+.card-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    background: var(--bg-sidebar);
+    z-index: 10;
+}
+
+.card-detail-header h2 {
+    margin: 0;
+    color: var(--pink);
+    font-size: 1.5em;
+}
+
+.card-detail-body {
+    padding: 0;
+}
+
+.card-detail-body .card {
+    border: none;
+    box-shadow: none;
+    margin: 0;
 }
 
 /* 要望・問い合わせフォーム */

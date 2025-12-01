@@ -48,8 +48,13 @@ aside::before {
     letter-spacing: 0.5px;
     font-family: var(--font-display);
     position: relative;
-    transition: color 0.3s;
+    transition: color 0.3s, transform 0.2s;
     text-shadow: 0 2px 4px rgba(189, 147, 249, 0.2);
+    user-select: none;
+}
+
+.sidebar-header:active {
+    transform: scale(0.98);
 }
 
 .sidebar-header::after {

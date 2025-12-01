@@ -154,6 +154,11 @@ function closeRouteDetailModal() {
 // キーボード操作対応（ESCキー）
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
+        const cardDetailModal = document.getElementById('card-detail-modal');
+        if (cardDetailModal && cardDetailModal.style.display === 'flex') {
+            closeCardDetailModal();
+            return;
+        }
         const imageModal = document.getElementById('image-modal');
         if (imageModal && imageModal.style.display === 'block') {
             closeImageModal();

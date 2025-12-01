@@ -253,20 +253,31 @@ function renderHome() {
             <span><i class="fas fa-fire" aria-hidden="true"></i> 人気の投稿</span>
             <i class="fas fa-chevron-down section-toggle-icon" style="${homeSections.popular ? 'transform: rotate(180deg);' : ''}" aria-hidden="true"></i>
         </div>
-        <div id="section-popular" class="section-content ${popOpen}" role="region">
-            ${sortedByLikes.slice(0, 10).map(p => createCardHtml(p)).join('')}
+        <div id="section-popular" class="section-content-horizontal ${popOpen}" role="region">
+            <div class="card-scroll-container">
+                ${sortedByLikes.slice(0, 10).map(p => createCompactCardHtml(p)).join('')}
+            </div>
         </div>
         
         <div class="section-header" onclick="toggleHomeSection('latest')" role="button" tabindex="0" aria-expanded="${homeSections.latest}">
             <span><i class="fas fa-clock" aria-hidden="true"></i> 最新の投稿</span>
             <i class="fas fa-chevron-down section-toggle-icon" style="${homeSections.latest ? 'transform: rotate(180deg);' : ''}" aria-hidden="true"></i>
         </div>
-        <div id="section-latest" class="section-content ${latOpen}" role="region">
-            ${sortedByDate.slice(0, 10).map(p => createCardHtml(p)).join('')}
+        <div id="section-latest" class="section-content-horizontal ${latOpen}" role="region">
+            <div class="card-scroll-container">
+                ${sortedByDate.slice(0, 10).map(p => createCompactCardHtml(p)).join('')}
+            </div>
         </div>
     `;
     
     initTwitterWidgets();
+    
+    // ドラッグスクロール機能を再初期化（DOMが更新された後）
+    setTimeout(() => {
+        if (typeof initDragScroll === 'function') {
+            initDragScroll();
+        }
+    }, 200);
 }
 
 function toggleHomeSection(sectionName) {

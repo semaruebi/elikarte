@@ -151,18 +151,18 @@ function createCardHtml(post, hideRegionRoute = false) {
     const regionClass = getRegionClass(post.region || "");
     
     // ルートが選択されている場合は、リージョンとルート名を非表示
-    const regionRouteHtml = hideRegionRoute ? "" : `<div><span class="badge ${regionClass}">${escapedRegion}</span><span class="route-name">${escapedRoute}</span></div>`;
+    const regionRouteHtml = hideRegionRoute ? "" : `<div><span class="badge ${regionClass}">${escapedRegion}</span><span class="route-name clickable-route" onclick="event.stopPropagation(); navigateToRoute('${escapeUrl(post.region)}', '${escapeUrl(post.route)}')" role="button" tabindex="0">${escapedRoute}</span></div>`;
     
     // タイトルを表示（タイトルがある場合のみ）
     const titleHtml = post.title ? `<h3 class="card-title">${escapeHtml(post.title)}</h3>` : "";
     
     return `
-        <article class="card" id="card-${escapedId}" role="article">
+        <article class="card clickable-card" id="card-${escapedId}" role="article" onclick="expandCard('${postIdJs}')">
             <div class="card-meta">
                 ${regionRouteHtml}
                 <div style="display: flex; gap: 8px;">
-                    <button class="edit-btn" onclick="editPost('${postIdJs}')" title="編集" aria-label="投稿を編集"><i class="fas fa-edit" aria-hidden="true"></i></button>
-                    <button class="delete-btn" onclick="deletePost('${postIdJs}')" title="削除" aria-label="投稿を削除"><i class="fas fa-trash" aria-hidden="true"></i></button>
+                    <button class="edit-btn" onclick="event.stopPropagation(); editPost('${postIdJs}')" title="編集" aria-label="投稿を編集"><i class="fas fa-edit" aria-hidden="true"></i></button>
+                    <button class="delete-btn" onclick="event.stopPropagation(); deletePost('${postIdJs}')" title="削除" aria-label="投稿を削除"><i class="fas fa-trash" aria-hidden="true"></i></button>
                 </div>
             </div>
             ${titleHtml}
@@ -173,27 +173,64 @@ function createCardHtml(post, hideRegionRoute = false) {
             <div class="action-bar">
                 <time style="font-size:0.8em; color:var(--comment);" datetime="${post.timestamp}">${timestamp}</time>
                 <div style="display:flex; gap:15px;">
-                    <button class="comment-toggle-btn" onclick="toggleComments('${postIdJs}')" aria-label="コメントを${commentCount}件表示">
+                    <button class="comment-toggle-btn" onclick="event.stopPropagation(); toggleComments('${postIdJs}')" aria-label="コメントを${commentCount}件表示">
                         <i class="far fa-comments" aria-hidden="true"></i> ${commentCount}
                     </button>
-                    <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${postIdJs}', this)" aria-label="${isLiked ? 'いいねを取り消す' : 'いいね'}">
+                    <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${postIdJs}', this)" aria-label="${isLiked ? 'いいねを取り消す' : 'いいね'}">
                         <i class="${isLiked ? 'fas' : 'far'} fa-heart" aria-hidden="true"></i> <span>${post.likes || 0}</span>
                     </button>
                 </div>
             </div>
-            <div class="comments-section">
+            <div class="comments-section" onclick="event.stopPropagation()">
                 <div id="comments-${escapedId}" class="comments-container" role="region" aria-label="コメント">
                     ${commentsHtml}
                     <div style="margin-top:10px;">
-                        <button class="comment-action-btn" onclick="showReplyForm('${postIdJs}', null)" aria-label="コメントを書く">
+                        <button class="comment-action-btn" onclick="event.stopPropagation(); showReplyForm('${postIdJs}', null)" aria-label="コメントを書く">
                             <i class="fas fa-plus" aria-hidden="true"></i> コメントを書く
                         </button>
                         <div id="reply-form-${escapedId}-root" class="comment-form">
                             <textarea id="input-comment-${escapedId}-root" class="comment-input" rows="2" placeholder="見せてちょうだい..." aria-label="コメント入力"></textarea>
-                            <button class="comment-submit-btn" onclick="submitComment('${postIdJs}', null)" aria-label="コメントを送信">送信</button>
+                            <button class="comment-submit-btn" onclick="event.stopPropagation(); submitComment('${postIdJs}', null)" aria-label="コメントを送信">送信</button>
                         </div>
                     </div>
                 </div>
+            </div>
+        </article>
+    `;
+}
+
+/**
+ * コンパクトカードHTML生成（ホーム画面用）
+ */
+function createCompactCardHtml(post) {
+    const isLiked = myLikedPosts.includes(post.id);
+    const escapedId = escapeUrl(post.id);
+    const postIdJs = post.id.replace(/'/g, "\\'");
+    const escapedRegion = escapeHtml(post.region || "");
+    const escapedRoute = escapeHtml(post.route || "");
+    const escapedTitle = escapeHtml(post.title || "");
+    
+    const postComments = allData.comments ? allData.comments.filter(c => c.postId === post.id) : [];
+    const commentCount = postComments.length;
+    
+    const tagsHtml = createTagsHtml(post.tags);
+    const regionClass = getRegionClass(post.region || "");
+    
+    // コンテンツのプレビュー（最初の100文字）
+    const contentPreview = (post.content || "").substring(0, 100) + (post.content && post.content.length > 100 ? "..." : "");
+    
+    return `
+        <article class="compact-card" id="compact-card-${escapedId}" data-post-id="${postIdJs}" role="article">
+            <div class="compact-card-header">
+                <span class="badge ${regionClass}">${escapedRegion}</span>
+                <span class="compact-route-name">${escapedRoute}</span>
+            </div>
+            <h4 class="compact-card-title">${escapedTitle}</h4>
+            ${tagsHtml}
+            <p class="compact-card-preview">${escapeHtml(contentPreview)}</p>
+            <div class="compact-card-footer">
+                <span class="compact-stat"><i class="far fa-heart" aria-hidden="true"></i> ${post.likes || 0}</span>
+                <span class="compact-stat"><i class="far fa-comments" aria-hidden="true"></i> ${commentCount}</span>
             </div>
         </article>
     `;
