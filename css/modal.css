@@ -656,34 +656,117 @@ body.modal-open { overflow: hidden; }
 
 .elite-enemies-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 12px;
 }
 
 .elite-enemy-item {
-    padding: 10px 15px;
+    position: relative;
+    padding: 8px;
     background: var(--input-bg);
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
+    border: 3px solid var(--border-color);
+    border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 0.95em;
-    color: var(--fg-primary);
     text-align: center;
-    font-weight: 500;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.elite-enemy-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
 }
 
 .elite-enemy-item:hover {
     border-color: var(--purple);
     background: var(--current-line);
-    transform: translateY(-2px);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    z-index: 10;
 }
 
 .elite-enemy-item.selected {
     background: var(--purple);
-    border-color: var(--purple);
+    border-color: var(--pink);
+    box-shadow: 0 0 0 3px rgba(255, 121, 198, 0.3);
+}
+
+.elite-enemy-item.selected::after {
+    content: '✓';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--pink);
     color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-weight: bold;
+    font-size: 14px;
+    border: 2px solid var(--bg-sidebar);
+}
+
+/* ツールチップ */
+.elite-enemy-tooltip {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.elite-enemy-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid rgba(0, 0, 0, 0.9);
+}
+
+.elite-enemy-item:hover .elite-enemy-tooltip {
+    opacity: 1;
+}
+
+/* フォールバック用テキスト */
+.elite-enemy-name-fallback {
+    font-size: 0.85em;
+    color: var(--fg-primary);
+    font-weight: 500;
+    line-height: 1.2;
+    word-break: break-all;
+}
+
+/* テキストのみボタン */
+.elite-enemy-text-only {
+    padding: 12px 8px;
+    font-size: 0.9em;
+}
+
+.elite-enemy-text-only .elite-enemy-name-fallback {
+    display: block;
 }
 
 .elite-enemy-modal-footer {

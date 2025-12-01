@@ -98,12 +98,39 @@ function createTagsHtml(tags) {
         if (!trimmed) return;
         
         let tagClass = "tag-other";
-        if (TAG_TYPES.REG.includes(trimmed)) tagClass = "tag-reg";
-        else if (TAG_TYPES.COST.includes(trimmed)) tagClass = "tag-cost";
+        let isEliteTag = false;
+        
+        if (TAG_TYPES.REG.includes(trimmed)) {
+            tagClass = "tag-reg";
+        } else if (TAG_TYPES.COST.includes(trimmed)) {
+            tagClass = "tag-cost";
+        } else {
+            // レギュレーションでもCostでもない → 精鋭タグの可能性
+            isEliteTag = true;
+        }
         
         const escapedTag = escapeHtml(trimmed);
         const tagJs = trimmed.replace(/'/g, "\\'");
-        html += `<span class="tag-badge ${tagClass} clickable-tag" onclick="searchByTag('${tagJs}')" role="button" tabindex="0" aria-label="${escapedTag}で検索" title="${escapedTag}で検索">${escapedTag}</span>`;
+        
+        // 精鋭タグで画像がある場合
+        if (isEliteTag && typeof getEliteEnemyImagePath === 'function') {
+            const imagePath = getEliteEnemyImagePath(trimmed);
+            if (imagePath) {
+                html += `
+                    <span class="tag-badge tag-elite clickable-tag" onclick="searchByTag('${tagJs}')" role="button" tabindex="0" aria-label="${escapedTag}で検索" title="${escapedTag}">
+                        <img src="${imagePath}" alt="${escapedTag}" class="tag-elite-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                        <span class="tag-elite-name-fallback" style="display:none;">${escapedTag}</span>
+                        <span class="tag-elite-tooltip">${escapedTag}</span>
+                    </span>
+                `;
+            } else {
+                // 画像がない場合は通常のタグ
+                html += `<span class="tag-badge ${tagClass} clickable-tag" onclick="searchByTag('${tagJs}')" role="button" tabindex="0" aria-label="${escapedTag}で検索" title="${escapedTag}で検索">${escapedTag}</span>`;
+            }
+        } else {
+            // 通常のタグ
+            html += `<span class="tag-badge ${tagClass} clickable-tag" onclick="searchByTag('${tagJs}')" role="button" tabindex="0" aria-label="${escapedTag}で検索" title="${escapedTag}で検索">${escapedTag}</span>`;
+        }
     });
     html += '</div>';
     return html;
