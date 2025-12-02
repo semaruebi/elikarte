@@ -22,8 +22,8 @@
     --card-radius: 12px;
     
     /* ★フォント定義 */
-    --font-display: 'M PLUS Rounded 1c', sans-serif;
-    --font-body: 'Zen Maru Gothic', 'Kiwi Maru', sans-serif;
+    --font-display: 'Genshin Impact', 'M PLUS Rounded 1c', sans-serif;
+    --font-body: 'Genshin Impact', 'Zen Maru Gothic', 'Kiwi Maru', sans-serif;
     
     /* 透過背景 */
     --bg-sidebar-trans: rgba(40, 42, 54, 0.95);

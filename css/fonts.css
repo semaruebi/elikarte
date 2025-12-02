@@ -1,0 +1,25 @@
+/**
+ * フォント定義
+ * Genshin Impact 公式フォント
+ */
+
+/* 原神フォント - 日本語 */
+@font-face {
+    font-family: 'Genshin Impact';
+    src: url('../assets/fonts/ja-jp.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+}
+
+/* 原神フォント - 中国語（補助） */
+@font-face {
+    font-family: 'Genshin Impact';
+    src: url('../assets/fonts/zh-cn.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+4E00-9FFF;
+}
+
