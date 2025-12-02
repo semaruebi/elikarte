@@ -14,12 +14,9 @@ function renderStats() {
     }
     
     const container = document.getElementById('main-container');
-    const titleEl = document.getElementById('current-view-title');
-    
     if (!container) return;
-    if (titleEl) {
-        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">📊 統計情報';
-    }
+    
+    setPageTitle('📊 統計情報');
     
     // データが不足している場合
     if (!allData.posts || allData.posts.length === 0) {
@@ -40,7 +37,7 @@ function renderStats() {
         <div class="stats-container" style="animation: fadeIn 0.5s ease;">
             <div class="stats-header" style="text-align: center; padding: 35px 25px; background: var(--bg-sidebar); border-radius: 16px; margin-bottom: 30px; box-shadow: 0 8px 24px rgba(111, 212, 241, 0.2), 0 2px 8px rgba(189, 147, 249, 0.15); border: 2px solid transparent; background-image: linear-gradient(var(--bg-sidebar), var(--bg-sidebar)), linear-gradient(135deg, var(--cyan), var(--purple)); background-origin: border-box; background-clip: padding-box, border-box; position: relative;">
                 <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(111, 212, 241, 0.05) 0%, rgba(189, 147, 249, 0.05) 100%); border-radius: 14px; pointer-events: none;"></div>
-                <h2 style="margin: 0 0 12px 0; font-size: 2.2em; font-weight: bold; background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; position: relative; z-index: 1;"><i class="fas fa-chart-line" style="-webkit-text-fill-color: var(--cyan);"></i> 統計ダッシュボード</h2>
+                <h2 style="margin: 0 0 12px 0; font-size: 2.2em; font-weight: bold; background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: 10px;"><i class="fas fa-chart-line" style="-webkit-text-fill-color: var(--cyan);"></i><span>統計ダッシュボード</span></h2>
                 <p style="margin: 0; font-size: 1.15em; color: var(--fg-primary); font-weight: 500; position: relative; z-index: 1;">みんなの健康状態を診断したわよ💉</p>
             </div>
             

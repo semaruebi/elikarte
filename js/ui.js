@@ -322,12 +322,9 @@ function renderHome() {
     }
     
     const container = document.getElementById('main-container');
-    const titleEl = document.getElementById('current-view-title');
     if (!container) return;
     
-    if (titleEl) {
-        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">エリかるて！';
-    }
+    setPageTitle();
     
     // 投稿が全くない場合の空の状態
     if (!allData.posts || allData.posts.length === 0) {
@@ -408,10 +405,8 @@ function filterPosts(region, route) {
         closePostForm();
     }
     
-    const titleEl = document.getElementById('current-view-title');
-    if (titleEl) {
-        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">${escapeHtml(region)} > ${escapeHtml(route)}`;
-    }
+    // タイトルを設定
+    setPageTitle();
     renderPosts();
     closeSidebarOnNavigation();
 }

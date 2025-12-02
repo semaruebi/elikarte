@@ -20,6 +20,7 @@ async function fetchData(btnElement = null, forceRefresh = false) {
         btnElement.innerHTML = '<i class="fas fa-sync-alt fa-spin" aria-hidden="true"></i>';
         btnElement.setAttribute('aria-label', '更新中...');
     } else if (!allData.posts.length) {
+        // 初回読み込み時はシグウィンのローディングを表示
         container.innerHTML = `
             <div class="loading" role="status" aria-live="polite" style="text-align: center; padding: 40px;">
                 <img src="assets/images/sigewinne/ochusha.webp" alt="治療中のシグウィン" style="width: 120px; height: 120px; object-fit: contain; margin: 0 auto 20px; display: block; animation: bounce 1s infinite;">
@@ -97,6 +98,45 @@ async function fetchData(btnElement = null, forceRefresh = false) {
             btnElement.innerHTML = originalIcon;
             btnElement.setAttribute('aria-label', '最新情報に更新');
         }
+    }
+}
+
+/**
+ * パスワードを検証（クライアント側）
+ */
+async function verifyPasswordAPI(postId, password) {
+    try {
+        // 投稿データを取得
+        const post = allData.posts.find(p => p.id === postId);
+        if (!post) {
+            console.error('Post not found:', postId);
+            return false;
+        }
+        
+        const storedHash = post.password || '';
+        
+        // 管理者パスワードのチェック
+        const adminHash = await hashPassword(password);
+        if (adminHash === CONFIG.ADMIN_PASSWORD_HASH) {
+            return true;
+        }
+        
+        // 投稿パスワードが設定されていない場合は、管理者パスワードのみ許可
+        if (!storedHash || storedHash === '') {
+            return false;
+        }
+        
+        // 入力パスワードが空の場合は拒否
+        if (!password || password === '') {
+            return false;
+        }
+        
+        // 入力パスワードをハッシュ化して比較
+        const inputHash = await hashPassword(password);
+        return inputHash === storedHash;
+    } catch (err) {
+        console.error('Password verification error:', err);
+        return false;
     }
 }
 
