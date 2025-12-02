@@ -39,4 +39,5 @@ coverage/
 
 # Private/Sensitive
 gas.txt
+data/gas.txt
 *.private.*
