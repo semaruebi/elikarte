@@ -52,7 +52,7 @@ function checkImages() {
     
     if (fs.existsSync(eliteImagesJsPath)) {
       const eliteImagesJs = fs.readFileSync(eliteImagesJsPath, 'utf-8');
-      const jsImages = [...eliteImagesJs.matchAll(/['"]([^'"]+\.(?:png|jpg|jpeg|webp))['"/gi)];
+      const jsImages = [...eliteImagesJs.matchAll(/['"]([^'"]+\.(?:png|jpg|jpeg|webp))['"]/gi)];
       
       if (jsImages.length !== eliteImages.length) {
         warnings.push(`⚠️  elite-enemy-images.js の更新が必要かも（実際: ${eliteImages.length}枚、JS: ${jsImages.length}枚）`);
