@@ -10,6 +10,13 @@ function togglePostForm() {
     form.setAttribute('aria-expanded', !isClosed);
 }
 
+function closePostForm() {
+    const form = document.getElementById('post-form-container');
+    if (!form) return;
+    form.classList.add('closed');
+    form.setAttribute('aria-expanded', 'false');
+}
+
 function openImageModal(imageUrl) {
     const modal = document.getElementById('image-modal');
     const modalImage = document.getElementById('modal-image');

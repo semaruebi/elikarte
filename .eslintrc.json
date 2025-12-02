@@ -113,6 +113,7 @@
     "fetchData": "readonly",
     "handleImagePreview": "readonly",
     "togglePostForm": "readonly",
+    "closePostForm": "readonly",
     "toggleMobileSidebar": "readonly",
     "clearSelectedEliteEnemies": "readonly",
     "loadEliteEnemiesForEdit": "readonly",

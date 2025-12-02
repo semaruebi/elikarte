@@ -316,6 +316,11 @@ function renderHome() {
         searchInput.value = '';
     }
     
+    // 投稿フォームを閉じる（入力内容は保持）
+    if (typeof closePostForm === 'function') {
+        closePostForm();
+    }
+    
     const container = document.getElementById('main-container');
     const titleEl = document.getElementById('current-view-title');
     if (!container) return;
@@ -397,6 +402,12 @@ function toggleHomeSection(sectionName) {
 
 function filterPosts(region, route) {
     currentFilter = { region, route };
+    
+    // 投稿フォームを閉じる（入力内容は保持）
+    if (typeof closePostForm === 'function') {
+        closePostForm();
+    }
+    
     const titleEl = document.getElementById('current-view-title');
     if (titleEl) {
         titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">${escapeHtml(region)} > ${escapeHtml(route)}`;

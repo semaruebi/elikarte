@@ -59,6 +59,12 @@ function toggleBookmark(postId, buttonElement) {
  */
 function renderBookmarks() {
     currentFilter = { region: 'bookmarks', route: null };
+    
+    // 投稿フォームを閉じる（入力内容は保持）
+    if (typeof closePostForm === 'function') {
+        closePostForm();
+    }
+    
     const container = document.getElementById('main-container');
     const titleEl = document.getElementById('current-view-title');
     
