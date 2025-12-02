@@ -36,6 +36,18 @@ function debounce(func, wait) {
 }
 
 /**
+ * タイトルを設定（常にエリかるて！固定）
+ */
+function setPageTitle(customTitle = null) {
+    const titleEl = document.getElementById('current-view-title');
+    if (!titleEl) return;
+    
+    const siteIcon = '<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">';
+    const title = customTitle || 'エリかるて！';
+    titleEl.innerHTML = `${siteIcon}${title}`;
+}
+
+/**
  * SHA-256ハッシュを計算（GAS側と同じ形式）
  */
 async function hashPassword(password) {
@@ -47,18 +59,6 @@ async function hashPassword(password) {
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray.map(b => ('0' + b.toString(16)).slice(-2)).join('');
     return hashHex;
-}
-
-/**
- * テスト用：管理者パスワードのハッシュを計算
- * ブラウザコンソールで実行： testAdminPasswordHash()
- */
-async function testAdminPasswordHash() {
-    const adminPassword = 'frogDel400EEposts';
-    const hash = await hashPassword(adminPassword);
-    console.log('管理者パスワードのハッシュ:', hash);
-    console.log('このハッシュをCONFIG.ADMIN_PASSWORD_HASHに設定してね💉');
-    return hash;
 }
 
 /**

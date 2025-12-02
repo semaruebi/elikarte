@@ -14,12 +14,9 @@ function renderStats() {
     }
     
     const container = document.getElementById('main-container');
-    const titleEl = document.getElementById('current-view-title');
-    
     if (!container) return;
-    if (titleEl) {
-        titleEl.innerHTML = '<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">📊 統計情報';
-    }
+    
+    setPageTitle('📊 統計情報');
     
     // データが不足している場合
     if (!allData.posts || allData.posts.length === 0) {

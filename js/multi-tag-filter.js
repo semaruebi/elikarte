@@ -203,12 +203,9 @@ function applyMultiTagFilter() {
     
     // 結果を表示
     const container = document.getElementById('main-container');
-    const titleEl = document.getElementById('current-view-title');
     
-    // タイトルは固定のまま（エリかるて！）
-    if (titleEl) {
-        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">エリかるて！`;
-    }
+    // タイトルを設定
+    setPageTitle();
     
     if (container) {
         const modeText = filterMode === 'AND' ? 'すべて含む' : 'いずれかを含む';

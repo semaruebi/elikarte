@@ -199,7 +199,6 @@ function addToSearchHistory(keyword) {
 function filterBySearch() {
     const keyword = document.getElementById('search-input')?.value.trim() || '';
     const keywordLower = keyword.toLowerCase();
-    const titleEl = document.getElementById('current-view-title');
     
     if (!keyword) {
         renderHome();
@@ -232,10 +231,8 @@ function filterBySearch() {
         return matchesContent(p) || (p.tags && hasPartialTag(p.tags, keyword));
     });
     
-    // タイトルは固定のまま（エリかるて！）
-    if (titleEl) {
-        titleEl.innerHTML = `<img src="assets/images/siteparts/elitemanager.png" alt="エリかるて！アイコン" class="site-icon">エリかるて！`;
-    }
+    // タイトルを設定
+    setPageTitle();
     
     // 検索結果を投稿フォームの位置に表示
     let html = `

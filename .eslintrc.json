@@ -193,6 +193,7 @@
     "setFilterMode": "readonly",
         "updateTagSearchBehavior": "readonly",
         "setFilterMode": "readonly",
+        "setPageTitle": "readonly",
     "toggleFilterTag": "readonly",
     "updateSelectedTagsDisplay": "readonly",
     "updateTagButtonStates": "readonly",
