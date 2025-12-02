@@ -8,7 +8,7 @@ let allData = { routes: [], posts: [], comments: [], eliteEnemies: [] };
 /**
  * データ取得（リトライ機能付き）
  */
-async function fetchData(btnElement = null) {
+async function fetchData(btnElement = null, forceRefresh = false) {
     const container = document.getElementById('main-container');
     if (!container) return;
     
@@ -29,13 +29,20 @@ async function fetchData(btnElement = null) {
     }
     
     try {
-        // アクセスログ用の情報をURLパラメータに追加（プライバシーに配慮）
+        // 初回読み込みまたは強制リフレッシュの場合のみキャッシュ破棄
+        const shouldBypassCache = forceRefresh || !allData.posts.length || btnElement;
+        
         const accessInfo = {
-            t: Date.now(), // キャッシュ回避用
             userAgent: navigator.userAgent || '',
             referer: document.referrer || '',
             url: window.location.href || ''
         };
+        
+        // キャッシュ破棄が必要な時だけタイムスタンプを追加
+        if (shouldBypassCache) {
+            accessInfo.t = Date.now();
+        }
+        
         const queryString = Object.entries(accessInfo)
             .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
             .join('&');
@@ -46,15 +53,6 @@ async function fetchData(btnElement = null) {
         try {
             const data = JSON.parse(text);
             allData = data;
-            
-            // デバッグ用：取得したデータを確認
-            console.log('Fetched data:', {
-                postsCount: data.posts ? data.posts.length : 0,
-                routesCount: data.routes ? data.routes.length : 0,
-                commentsCount: data.comments ? data.comments.length : 0,
-                eliteEnemiesCount: data.eliteEnemies ? data.eliteEnemies.length : 0,
-                firstPost: data.posts && data.posts.length > 0 ? data.posts[0] : null
-            });
             
             collectAllTags();
             renderSidebar();
@@ -75,7 +73,7 @@ async function fetchData(btnElement = null) {
                 showToast('データを更新したわよ！最新の診断結果なの💉', 'success', 2000);
             }
         } catch (e) {
-            console.error('JSON Parse Error:', e, text);
+            console.error('JSON Parse Error:', e);
             throw new Error('データの解析に失敗しました');
         }
     } catch (err) {
@@ -144,7 +142,7 @@ async function submitComment(postId, parentId) {
         input.value = '';
         formDiv.style.display = 'none';
         formDiv.setAttribute('aria-hidden', 'true');
-        setTimeout(() => fetchData(), 1500);
+        setTimeout(() => fetchData(null, true), 1500);
     } catch (err) {
         showToast('あら、エラーみたい。落ち着くのよ。', 'error');
     } finally {

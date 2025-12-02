@@ -154,7 +154,7 @@ async function postData() {
         }
         
         togglePostForm();
-        setTimeout(() => fetchData(), 2000);
+        setTimeout(() => fetchData(null, true), 1500);
     } catch (err) {
         console.error('Post error:', err);
         showToast('あら、投稿に失敗しちゃったみたい。もう一度試してみてちょうだい', 'error');
@@ -182,7 +182,7 @@ async function deletePost(id) {
         });
         
         showToast('削除リクエストを送ったわ。あわあわ～しないで待っててね。', 'success');
-        setTimeout(() => fetchData(), 1500);
+        setTimeout(() => fetchData(null, true), 1500);
     } catch (err) {
         showToast('パスワードが違うみたい。もしかしてワルい子？', 'error');
     }
@@ -449,7 +449,7 @@ async function updatePost(id, password) {
         }
         
         togglePostForm();
-        setTimeout(() => fetchData(), 2000);
+        setTimeout(() => fetchData(null, true), 1500);
     } catch (err) {
         console.error('Update error:', err);
         showToast('パスワードが違うみたい。もしかしてワルい子？', 'error');
