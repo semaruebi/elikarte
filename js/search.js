@@ -322,7 +322,6 @@ function initSearchHistoryCloseHandler() {
         }
         
         // それ以外の場所をクリックしたら検索履歴を閉じる
-        console.log('検索履歴を閉じるわよ！');
         hideSearchHistory();
     });
 }
