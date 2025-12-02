@@ -24,6 +24,79 @@
     border-left-color: var(--purple);
 }
 
+/* 画像付きカード：背景画像を薄く表示 */
+.card-with-bg-image::before,
+.compact-card.card-with-bg-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--card-bg-image);
+    background-size: cover;
+    background-position: center;
+    opacity: 0.8;
+    z-index: 0;
+    pointer-events: none;
+    transition: opacity 0.1s ease;
+    
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        transparent 20%,              /* ここまで完全に透明 */
+        rgba(0, 0, 0, 0.01) 25%,      /* じわっと見え始める */
+        rgba(0, 0, 0, 0.05) 30%,
+        rgba(0, 0, 0, 0.15) 40%,
+        rgba(0, 0, 0, 0.35) 50%,      /* 中間地点 */
+        rgba(0, 0, 0, 0.60) 65%,
+        rgba(0, 0, 0, 0.85) 80%,
+        rgba(0, 0, 0, 0.96) 90%,
+        #000 100%                     /* ここで完全に見える */
+    );
+    
+    mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        transparent 20%,
+        rgba(0, 0, 0, 0.01) 25%,
+        rgba(0, 0, 0, 0.05) 30%,
+        rgba(0, 0, 0, 0.15) 40%,
+        rgba(0, 0, 0, 0.35) 50%,
+        rgba(0, 0, 0, 0.60) 65%,
+        rgba(0, 0, 0, 0.85) 80%,
+        rgba(0, 0, 0, 0.96) 90%,
+        #000 100%
+    );
+}
+
+.card-with-bg-image:hover::before,
+.compact-card.card-with-bg-image:hover::before {
+    opacity: 0.35;
+}
+
+/* 画像付きカードの内容を背景より前面に */
+.card-with-bg-image > *,
+.compact-card.card-with-bg-image > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ライトテーマでの背景画像の調整 */
+[data-theme="light"] .card-with-bg-image::before,
+[data-theme="light"] .compact-card.card-with-bg-image::before,
+[data-theme="sigewinne"] .card-with-bg-image::before,
+[data-theme="sigewinne"] .compact-card.card-with-bg-image::before {
+    opacity: 0.15;
+}
+
+[data-theme="light"] .card-with-bg-image:hover::before,
+[data-theme="light"] .compact-card.card-with-bg-image:hover::before,
+[data-theme="sigewinne"] .card-with-bg-image:hover::before,
+[data-theme="sigewinne"] .compact-card.card-with-bg-image:hover::before {
+    opacity: 0.25;
+}
+
 @keyframes cardFadeIn {
     from {
         opacity: 0;
@@ -915,6 +988,43 @@ button {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     letter-spacing: 0.5px;
     font-family: var(--font-body);
+}
+
+/* 投稿ボタン（メインアクション）を目立たせる */
+#submit-post-btn {
+    background: var(--cyan) !important;
+    color: #1a1d2e !important;
+    font-size: 1.1em !important;
+    padding: 14px 40px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    border: none !important;
+}
+
+#submit-post-btn:hover:not(:disabled) {
+    background: var(--purple) !important;
+    color: #fff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4) !important;
+}
+
+#submit-post-btn:active:not(:disabled) {
+    transform: translateY(0) !important;
+}
+
+#submit-post-btn:disabled,
+#submit-post-btn.posting {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+}
+
+/* ライトテーマでは白文字に */
+[data-theme="light"] #submit-post-btn,
+[data-theme="sigewinne"] #submit-post-btn {
+    color: #fff !important;
 }
 
 button:hover:not(:disabled, .posting) { 

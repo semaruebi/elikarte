@@ -183,8 +183,19 @@ function createCardHtml(post, hideRegionRoute = false) {
     // タイトルを表示（タイトルがある場合のみ）
     const titleHtml = post.title ? `<h3 class="card-title">${escapeHtml(post.title)}</h3>` : '';
     
+    // 背景画像の設定（画像がある場合、最初の画像を背景に）
+    let backgroundStyle = '';
+    let hasBackgroundClass = '';
+    if (post.imageUrl) {
+        const firstImageUrl = post.imageUrl.split(',')[0].trim();
+        if (firstImageUrl) {
+            backgroundStyle = ` style="--card-bg-image: url('${firstImageUrl}')"`;
+            hasBackgroundClass = ' card-with-bg-image';
+        }
+    }
+    
     return `
-        <article class="card clickable-card" id="card-${escapedId}" role="article" onclick="expandCard('${postIdJs}')">
+        <article class="card clickable-card${hasBackgroundClass}" id="card-${escapedId}" role="article" onclick="expandCard('${postIdJs}')"${backgroundStyle}>
             <div class="card-meta">
                 ${regionRouteHtml}
                 <div style="display: flex; gap: 8px;">
@@ -249,8 +260,19 @@ function createCompactCardHtml(post) {
     // コンテンツのプレビュー（最初の100文字）
     const contentPreview = (post.content || '').substring(0, 100) + (post.content && post.content.length > 100 ? '...' : '');
     
+    // 背景画像の設定（画像がある場合、最初の画像を背景に）
+    let backgroundStyle = '';
+    let hasBackgroundClass = '';
+    if (post.imageUrl) {
+        const firstImageUrl = post.imageUrl.split(',')[0].trim();
+        if (firstImageUrl) {
+            backgroundStyle = ` style="--card-bg-image: url('${firstImageUrl}')"`;
+            hasBackgroundClass = ' card-with-bg-image';
+        }
+    }
+    
     return `
-        <article class="compact-card" id="compact-card-${escapedId}" data-post-id="${postIdJs}" role="article">
+        <article class="compact-card${hasBackgroundClass}" id="compact-card-${escapedId}" data-post-id="${postIdJs}" role="article"${backgroundStyle}>
             <div class="compact-card-header">
                 <span class="badge ${regionClass}">${escapedRegion}</span>
                 <span class="compact-route-name">${escapedRoute}</span>
