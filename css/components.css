@@ -145,6 +145,7 @@
 .tag-elite:hover {
     border-color: var(--purple);
     transform: translateY(-2px);
+    z-index: 10001;
 }
 
 .tag-elite-icon {
@@ -174,7 +175,7 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
-    z-index: 100;
+    z-index: 10000;
 }
 
 .tag-elite-tooltip::before {
@@ -1042,7 +1043,7 @@ input[type="radio"], input[type="checkbox"] { display: none; }
     opacity: 0;
     pointer-events: none;
     transition: all 0.2s ease;
-    z-index: 9999;
+    z-index: 10000;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -1080,6 +1081,7 @@ input[type="radio"], input[type="checkbox"] { display: none; }
 .selected-elite-tag-with-image:hover {
     border-color: var(--purple);
     transform: translateY(-2px);
+    z-index: 10001;
 }
 
 /* 精鋭選択表示エリア */
